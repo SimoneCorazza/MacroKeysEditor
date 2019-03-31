@@ -1,5 +1,6 @@
 .settings
 settings.data
+.classpath
 
 # Maven
 bin/
@@ -13,6 +14,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+.project
 
 # Compiled class file
 *.class
