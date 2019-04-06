@@ -18,9 +18,9 @@ import com.macrokeyseditor.util.Size;
 import javax.swing.JButton;
 
 /**
- * Dialog per la creazione di una {@link Mask}.
- * Gestisce direttamente la modifica e l'aggiunta di {@link Mask}
- * tramite il {@link MasksManager}.
+ * Dialog for the creation of a {@link Mask}.
+ * Handles directly the editng and insertion of {@link Mask}
+ * by the {@link MasksManager}.
  */
 public class DialogMaskEdit extends JDialog {
 	private JTextField txtDiagonal;
@@ -28,20 +28,20 @@ public class DialogMaskEdit extends JDialog {
 	private JTextField txtResolutionY;
 	private JTextField txtName;
 	
-	/** Mask che si va a modificare */
+	/** Mask to edit */
 	private final Mask mask;
 	private final MasksManager manager;
 	/**
-	 * True se si sta modificando, False si si sta aggiungendo una {@link Mask}
+	 * True in case of editing, False in case of adding a {@link Mask}
 	 */
 	private final boolean editMode;
 	
 	
 	
 	/**
-	 * @param manager Manager tramite il quale eseguire le modifiche
-	 * @param m mask da modificare
-	 * @param parent Finestra padre di questa
+	 * @param manager Mask manager 
+	 * @param m Mask to edit
+	 * @param parent Parent window
 	 */
 	public DialogMaskEdit(MasksManager manager, Mask m, Window parent) {
 		super(parent, ModalityType.DOCUMENT_MODAL);
@@ -59,8 +59,8 @@ public class DialogMaskEdit extends JDialog {
 	}
 	
 	/**
-	 * @param manager Manager tramite il quale eseguire le modifiche
-	 * @param parent Finestra padre di questa
+	 * @param managerMask manager 
+	 * @param parent Parent window
 	 * @wbp.parser.constructor
 	 */
 	public DialogMaskEdit(MasksManager manager, Window parent) {

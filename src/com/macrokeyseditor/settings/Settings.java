@@ -12,7 +12,7 @@ import com.macrokeyseditor.MasksManager;
 import com.macrokeyseditor.settings.SettingLoadException.Motive;
 
 /**
- * Classe statica per la gestione delle impostazioni
+ * Static class to manage the settings
  */
 public class Settings {
 
@@ -24,9 +24,9 @@ public class Settings {
 	
 	
 	/**
-	 * Carica le impostazioni dei manager
-	 * @param manager Manager delle maschere
-	 * @throws SettingLoadException In caso di errore nel caricamento
+	 * Load the setting og the managers
+	 * @param manager Mask manager
+	 * @throws SettingLoadException In case of error in the loading
 	 */
 	public static void loadSettings(MasksManager manager) throws SettingLoadException {
 		Objects.requireNonNull(manager);
@@ -36,7 +36,7 @@ public class Settings {
 			s = new FileInputStream(SETTINGS_FILE);
 			manager.load(s);
 		} catch(FileNotFoundException e) {
-			throw new SettingLoadException(Motive.SettingFileCompromized);
+			throw new SettingLoadException(Motive.SettingFileNotFound);
 		} catch(IOException e) {
 			throw new SettingLoadException(Motive.SettingFileCompromized);
 		} finally {
@@ -44,7 +44,7 @@ public class Settings {
 				try {
 					s.close();
 				} catch (IOException e) {
-					// Ignoro
+					// Ignore
 				}
 			}
 		}
@@ -53,9 +53,9 @@ public class Settings {
 	
 	
 	/**
-	 * Salva le impostazioni dei manager
-	 * @param manager Manager delle maschere
-	 * @throws IOException In caso di errore nel salvataggio
+	 * Save the managers settings
+	 * @param manager Setting manager
+	 * @throws IOException In case of IO error
 	 */
 	public static void saveSettings(MasksManager manager) throws IOException {
 		Objects.requireNonNull(manager);

@@ -2,22 +2,24 @@ package com.macrokeyseditor;
 
 import java.util.Objects;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import com.macrokeys.MacroScreen;
 import com.macrokeys.screen.Screen;
 import com.macrokeyseditor.util.Size;
 
 /**
- * Maschera utilizzata per il background di una {@link MacroScreen}.
- * La maschera ha lo scopo di rappresentare uno schermo di un dispositivo.
- */
+ * Mask used for the background of a {@link MacroScreen}.
+ * The mask is intended to represent a screen of a device.
+ */
 public class Mask {
 	
-	/** Nome della maschera; non null */
+	/** Name of the mask; never null */
 	private String name = "";
 	
 	private float diagonal = 1;
 	
-	/** Risoluzione orizzontale della maschera in pixel; #width >= #height */
+	/** Horizzontal resolution of the mask in pixels; #width >= #height */
 	private Size resolution;
 	
 	
@@ -28,18 +30,17 @@ public class Mask {
 
 	
 	/**
-	 * @return Nome della maschera; non null
+	 * @return Name of the mask
 	 */
-	public String getName() {
+	public @NonNull String getName() {
 		return name;
 	}
 
 
 	/**
-	 * @param name Nome da impostare; non null
-	 * @throws NullPointerException Se {@code name} è null
+	 * @param name Name to set
 	 */
-	public void setName(String name) {
+	public void setName(@NonNull String name) {
 		Objects.requireNonNull(name);
 		
 		this.name = name;
@@ -47,7 +48,7 @@ public class Mask {
 
 
 	/**
-	 * @return Diagonale in pollici della maschera; > 0
+	 * @return Diagonal in inches of the mask; > 0
 	 */
 	public float getDiagonal() {
 		return diagonal;
@@ -55,8 +56,8 @@ public class Mask {
 
 
 	/**
-	 * @param diameter Diagonale in pollici della maschera; > 0
-	 * @throws IllegalArgumentException Se {@code diameter} <= 0
+	 * @param diameter Diagonal in inches of the mask; > 0
+	 * @throws IllegalArgumentException If {@code diameter} <= 0
 	 */
 	public void setDiameter(float diagonal) {
 		if(diagonal <= 0) {
@@ -68,7 +69,7 @@ public class Mask {
 
 
 	/**
-	 * @return Risoluzione della maschera in pixel; width ed height > 0
+	 * @return Pixel resolution of the mask; width and height > 0
 	 */
 	public Size getResolution() {
 		return resolution;
@@ -76,9 +77,9 @@ public class Mask {
 
 
 	/**
-	 * Imposta la risoluzione della maschera
-	 * @param size Risoluzione della maschera in pixel
-	 * @throws IllegalArgumentException Se la lunghezza o l'altezza sono <= 0
+	 * Sets the resolution of the mask
+	 * @param size Mask resolution in pixels
+	 * @throws IllegalArgumentException If the lenght or height are <= 0
 	 */
 	public void setResolution(Size size) {
 		if(size.width <= 0 && size.height <= 0) {
@@ -95,8 +96,7 @@ public class Mask {
 	
 	
 	/**
-	 * Calcola l'aspect ratio della maschera quando orizzontale.
-	 * Calcolata tramite {@code width / height}
+	 * Calculate the aspect ratio of the mask when horizontal.
 	 * @return Aspect ratio; > 0
 	 */
 	public float aspectRatio() {
@@ -105,8 +105,7 @@ public class Mask {
 	
 	
 	/**
-	 * Calcola l'aspect ratio della maschera quando verticale.
-	 * Calcolata tramite {@code height / width}
+	 * Calculate the aspect ratio of the mask when horizontal.
 	 * @return Aspect ratio; > 0
 	 */
 	public float reverseAspectRatio() {
@@ -116,11 +115,10 @@ public class Mask {
 	
 	
 	/**
-	 * Ottiene la dimensione della maschera in orizzontale per lo schermo
-	 * indicato
-	 * @param screen Schermo sul quale calibrare le dimensioni della maschera
-	 * @return Dimensioni della maschera in pixel per lo schermo {@code screen}
-	 */
+	* Get the horizontally size of the mask for the given screen
+	* @param screen Screen on which to calibrate the mask size
+	* @return Size of the mask in pixels for the screen {@code screen}
+	*/
 	public Size getScreenSize(Screen screen) {
 		Objects.requireNonNull(screen);
 		

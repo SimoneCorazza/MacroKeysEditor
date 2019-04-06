@@ -2,7 +2,9 @@ package com.macrokeyseditor.util;
 
 import java.awt.Color;
 
-/** Utility statiche per l'utilizzo dei colori su questa piattaforma */
+/** 
+ * Static utility class for colors
+ */
 public final class ColorUtil {
 	
 	private static int ALPHA_MASK = 0xFF000000;
@@ -13,9 +15,9 @@ public final class ColorUtil {
 	private ColorUtil() {}
 	
 	/**
-	 * Converte il colore in formato AARRGGBB in color
-	 * @param argb Colore da convertire
-	 * @return Colore convertito
+	 * Convert a color from the format AARRGGBB {@link java.awt.Color}
+	 * @param argb Color to convert
+	 * @return Converted color
 	 */
 	public static java.awt.Color ARGBtoColor(int argb) {
 		int a = (argb & ALPHA_MASK) >>> 24;
@@ -26,9 +28,9 @@ public final class ColorUtil {
 	}
 	
 	/**
-	 * Converte il colore nel formato AARRGGBB
-	 * @param c Colore da convertire
-	 * @return Colore convertito
+	 * Convert a color from {@link java.awt.Color} to the format AARRGGBB
+	 * @param c Color to convert
+	 * @return Converted color
 	 */
 	public static int ColortoARGB(java.awt.Color c) {
 		int a = c.getAlpha();

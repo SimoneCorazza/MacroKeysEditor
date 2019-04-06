@@ -16,7 +16,7 @@ public final class Main {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
-			// Igoro
+			// Ignored
 		}
 		
 		WindowMacroSetupEditor f = new WindowMacroSetupEditor();

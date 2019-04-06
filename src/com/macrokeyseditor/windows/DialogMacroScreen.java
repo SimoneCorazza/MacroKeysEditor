@@ -29,7 +29,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
-/** Form per la creazione di un {@link MacroScreen} */
+/** Form for the creation of a {@link MacroScreen} */
 public class DialogMacroScreen extends JDialog {
 	
 	
@@ -40,23 +40,25 @@ public class DialogMacroScreen extends JDialog {
 	private JButton btnOk;
 	private JButton btnExit;
 	
-	/** Indica in che modalit� si �: modifica (true) o creazione (false) di una {@link MacroScreen} */
+	/** True for editing a {@link MacroScreen} false if creating a new one */
 	private final boolean modify;
+	
 	/**
-	 * Editor tramite il quele modfiicare una {@link MacroScreen} già esistente;
-	 * null sse {@code #modify} è false
+	 * Editor throught which edit an existring {@link MacroScreen};
+	 * null iif {@code #modify} is false
 	 */
 	private final MacroScreenEditor macroScreenEditor; 
 	
-	/** Macro screen creata o da modificare */
+	/** MacroScreen to create or edit */
 	private MacroScreen macroScreen;
-	/** Stato attuale della conferma di questa dialog */
+	
+	/** Coferm state for this dialog */
 	private boolean conferm;
 	
 
 	/**
-	 * Crea una nuova {@link MacroScreen}
-	 * @param parent Finestra padre
+	 * Create a new {@link MacroScreen}
+	 * @param parent Parent window
 	 * @wbp.parser.constructor
 	 */
 	public DialogMacroScreen(Window parent) {
@@ -65,16 +67,16 @@ public class DialogMacroScreen extends JDialog {
 		init();
 		modify = false;
 		macroScreen = new MacroScreen();
-		updateComponenets(); //Setto i valori dei controlli
+		updateComponenets();
 		macroScreenEditor = null;
 		conferm = false;
 	}
 	
 	/**
-	 * Modifica una {@link MacroScreen} esistente o ne crea una nuova
-	 * @param parent Finestra padre
-	 * @param s Editor tramite il quele modificare la {@link MacroScreen};
-	 * null per crearne una nuova
+	 * Edit an existing {@link MacroScreen} or create a new one
+	 * @param parent Parent window
+	 * @param s Editor throught which edit an existring {@link MacroScreen};
+	 * null to create a new one
 	 */
 	public DialogMacroScreen(Window parent, MacroScreenEditor s) {
 		super(parent, ModalityType.DOCUMENT_MODAL);
@@ -90,15 +92,15 @@ public class DialogMacroScreen extends JDialog {
 			macroScreen = new MacroScreen();
 			macroScreenEditor = null;
 		}
-		updateComponenets(); //Setto i valori dei controlli
-		conferm = true; //Conferma sempre
+		updateComponenets();
+		conferm = true;
 	}
 	
 	
 	
 	
 	/**
-	 * Inizializza il componente
+	 * Init the component
 	 */
 	private void init() {
 		final MyItemListener itemList = new MyItemListener();
@@ -168,7 +170,7 @@ public class DialogMacroScreen extends JDialog {
 		setLocationRelativeTo(getParent());
 	}
 	
-	/** Visualizza l'atteuale {@link MacroScreen} mediante i componenti */
+	/** Show the actual {@link MacroScreen} */
 	private void updateComponenets() {
 		cmbOrientation.setSelectedItem(macroScreen.getOrientation());
 		cmbSwipe.setSelectedItem(macroScreen.getSwipeType());
@@ -177,8 +179,8 @@ public class DialogMacroScreen extends JDialog {
 	}
 	
 	/**
-	 * Mostra la finestra
-	 * @return True l'utente conferma l'operazione
+	 * Show this dialog
+	 * @return True if the user confirm the operation
 	 */
 	public boolean showDialog() {
 		super.setVisible(true);
@@ -187,18 +189,18 @@ public class DialogMacroScreen extends JDialog {
 	
 	@Override
 	public void setVisible(boolean b) {
-		//Inutilizzabile dall'utente
+		// Not usable from the user
 	}
 	
 	/**
-	 * @return {@link MacroScreen} lavorata
+	 * @return {@link MacroScreen} edited/created
 	 */
 	public @NonNull MacroScreen getMacroScreen() {
 		return macroScreen;
 	}
 	
 	//------------------------------
-	// Classi per i callback
+	// Classes for the callbacks
 	//------------------------------
 	
 	
@@ -236,7 +238,7 @@ public class DialogMacroScreen extends JDialog {
 			Object s = e.getSource();
 			
 			if(s == btnExit) {
-				if(!modify) { // Segnalo che l'operazione di creazione � stata annullata
+				if(!modify) { // The creation operation was aborted
 					conferm = false;
 				}
 				dispatchEvent(new WindowEvent(DialogMacroScreen.this, WindowEvent.WINDOW_CLOSING));

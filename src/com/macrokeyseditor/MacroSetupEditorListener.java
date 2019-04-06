@@ -9,16 +9,16 @@ import com.macrokeys.MacroScreen;
 public interface MacroSetupEditorListener extends EventListener {
 	
 	/**
-	 * Callback per una azione eseguita su una {@link MacroScreen}
-	 * @param a Azione eseguita
-	 * @param e Editor associato alla {@link MacroScreen}
+	 * Callback for an action executed on a{@link MacroScreen}
+	 * @param a Action executed
+	 * @param e Editor associated at the {@link MacroScreen}
 	 */
 	void actionPerformed(Action a, @NonNull MacroScreenEditor e);
 	
 	/**
-	 * Callback per un cambiamento della selezione
-	 * @param old Vecchia schermata selezionata; null se nessuna
-	 * @param actual Attuale schermata selezionata; null se nessuna
+	 * Callback for a change in the selection
+	 * @param old Old selected screen; null if none
+	 * @param actual Actual selected screen; null if none
 	 */
 	void selectionChange(MacroScreenEditor old, MacroScreenEditor actual);
 	

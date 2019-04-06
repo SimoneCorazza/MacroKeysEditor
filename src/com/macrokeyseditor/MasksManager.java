@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import com.macrokeyseditor.util.JavaUtil;
 import com.macrokeyseditor.util.Size;
 
 /**
- * Gestisce le maschere
+ * Manage the masks
  */
 public final class MasksManager {
 
@@ -21,12 +23,12 @@ public final class MasksManager {
 	public static final String PROPERTY_MASK_DIAGONAL = "Diagonal";
 	public static final String PROPERTY_MASK_NAME = "Name";
 	
-	/** Maschere attualmenti presenti */
+	/** Masks actually present */
 	private final List<Mask> masks = new ArrayList<>();
 	
 	private Mask selected;
 	
-	/** Listener per le modifiche apportate al manager */
+	/** Listeners for the changes done to this */
 	private final List<MasksManagerListener> listeners = new ArrayList<>();
 	
 	
@@ -37,11 +39,11 @@ public final class MasksManager {
 	
 	
 	/**
-	 * Aggiunge la maschera indicata.
-	 * @param m Maschera da aggiungere
-	 * @throws IllegalArgumentException Se l'istanza è già stata inserita
+	 * Adds the mask
+	 * @param m Mask to add
+	 * @throws IllegalArgumentException If the instance is already present
 	 */
-	public void addMask(Mask m) {
+	public void addMask(@NonNull Mask m) {
 		Objects.requireNonNull(m);
 		if(JavaUtil.contains(m, masks)) {
 			throw new IllegalArgumentException("Mask already present");
@@ -54,15 +56,15 @@ public final class MasksManager {
 	
 	
 	/**
-	 * Rimuove la maschera indicata, se presente.
-	 * @param m Maschera da rimuovere
+	 * Remove the given mask instance
+	 * @param m Mask to remove
 	 */
-	public void removeMask(Mask m) {
+	public void removeMask(@NonNull Mask m) {
 		Objects.requireNonNull(m);
 		
 		boolean remove = JavaUtil.removeInstance(m, masks);
 		if(remove) {
-			// Caso si è rimossa la mask selezionata
+			// If the removed mask is selected
 			if(m == getSelected()) {
 				select(null);
 			}
@@ -73,7 +75,7 @@ public final class MasksManager {
 	
 	
 	/**
-	 * @return Ottiene la lista delle maschere attualmente disponibili
+	 * @return Masks actually available
 	 */
 	public Mask[] getMasks() {
 		Mask[] m = new Mask[masks.size()];
@@ -83,13 +85,13 @@ public final class MasksManager {
 	
 	
 	/**
-	 * Modifica una proprietà della maschera indicata.
-	 * @param m Maschera da modificare
-	 * @param property Nome della proprietà indicata
-	 * @param value Nuovo valore per la proprietà
-	 * @throws IllegalArgumentException Se l'istanza {@code m} non è presente o
-	 * {@code proprety} non è valida
-	 * @throws ClassCastException Se {@code value} non è del tipo giusto
+	 * Edit a field of the given mask
+	 * @param m mask to edit
+	 * @param property Name of the field to edit
+	 * @param value New value for the field
+	 * @throws IllegalArgumentException If {@code m} is not present or 
+	 * {@code proprety} is not valid
+	 * @throws ClassCastException If {@code value} is not the right type
 	 */
 	public void editMaskProperty(Mask m, String property, Object value) {
 		if(!JavaUtil.contains(m, masks)) {
@@ -122,19 +124,23 @@ public final class MasksManager {
 	
 	
 	/**
-	 * Aggiunge un listener per gli eventi
-	 * @param l Listener da aggiungere
+	 * Adds a listener for the events
+	 * @param l Listener to add
 	 */
-	public void addListener(MasksManagerListener l) {
+	public void addListener(@NonNull MasksManagerListener l) {
+		Objects.requireNonNull(l);
+		
 		listeners.add(l);
 	}
 	
 	
 	/**
-	 * Rimuove il listener degli eventi
-	 * @param l Listener da rimuovere
+	 * Remove the listener from the events
+	 * @param l Listener to remove
 	 */
-	public void removeListener(MasksManagerListener l) {
+	public void removeListener(@NonNull MasksManagerListener l) {
+		Objects.requireNonNull(l);
+		
 		JavaUtil.removeInstance(l, listeners);
 	}
 	
@@ -168,9 +174,9 @@ public final class MasksManager {
 
 
 	/**
-	 * Salva le maschere memorizzate
-	 * @param str Stream dal quale caricare le maschere
-	 * @throws IOException In caso di un errore di I/O
+	 * Save the masks in this
+	 * @param str Stream where to save the masks
+	 * @throws IOException In case of an IO error
 	 */
 	public void save(OutputStream str) throws IOException {
 		DataOutputStream s = new DataOutputStream(str);
@@ -187,9 +193,9 @@ public final class MasksManager {
 	
 	
 	/**
-	 * Carica le maschere memorizzate
-	 * @param str Stream dal quale caricare le maschere
-	 * @throws IOException In caso di un errore di I/O o di errore nel formato di caricamento
+	 * Load the masks
+	 * @param str Stream where to load from
+	 * @throws IOException In case of an IO error
 	 */
 	public void load(InputStream str) throws IOException {
 		DataInputStream s = new DataInputStream(str);
@@ -216,7 +222,7 @@ public final class MasksManager {
 	
 	
 	/**
-	 * @return Mask attualmente selezionata per l'editor
+	 * @return Selected mask
 	 */
 	public Mask getSelected() {
 		return selected;
@@ -225,8 +231,8 @@ public final class MasksManager {
 
 
 	/**
-	 * Seleziona la maschera da utilizzare per l'editor
-	 * @param selected Maschera da utilizzare; null se nessuna
+	 * Select the mask
+	 * @param selected Mask to select; null if none
 	 */
 	public void select(Mask selected) {
 		if(this.selected != selected) {
@@ -238,7 +244,7 @@ public final class MasksManager {
 
 
 	/**
-	 * Listener per gli eventi di modifica di {@link MaskManager}
+	 * Listener for change events of {@link MaskManager}
 	 */
 	public interface MasksManagerListener {
 		

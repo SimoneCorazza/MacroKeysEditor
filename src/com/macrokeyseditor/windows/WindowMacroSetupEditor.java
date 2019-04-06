@@ -44,7 +44,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * Form per l'editing della macro setup 
+ * Form for the eding of the {@link MacroSetup}
  */
 public class WindowMacroSetupEditor extends JFrame {
 	
@@ -72,12 +72,13 @@ public class WindowMacroSetupEditor extends JFrame {
 	
 	
 
-	/** Controllo per visualizzare le proprietà dei tasti */
+	/** Control to show the property of the keys */
 	private final MKPropetyComponent prop;
-	/** Componente per la visualizzazione e modifica della {@link MacroScreen} */
+	
+	/** Component to show and edit the {@link MacroScreen} */
 	private final MacroScreenTabPane tapMacroScreen;
 	
-	/** Manager dei menù */
+	/** Menu manager */
 	private final MenuMaskManager menuMaskManager;
 	
 	private MacroSetupEditor editor;
@@ -235,29 +236,28 @@ public class WindowMacroSetupEditor extends JFrame {
 		contentPane.add(tbbScreens, BorderLayout.CENTER);
 		
 		
-		// Per la gestione dei menù delle Mask
 		menuMaskManager = new MenuMaskManager(masksManager, mnMasks);
 		
 		addWindowListener(new WindowListener() {
 			
 			@Override
 			public void windowOpened(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
 			public void windowIconified(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
 			public void windowDeiconified(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
@@ -265,22 +265,22 @@ public class WindowMacroSetupEditor extends JFrame {
 				try {
 					Settings.saveSettings(masksManager);
 				} catch(IOException ignored) {
-					// Niente
+					// Nothing
 				}
 				
-				// Chiudo l'applicazione.
-				// Senza questa istruzione l'applicazione continua
+				// Close the app
+				// Without this the application continues
 				System.exit(NORMAL);
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
 			public void windowActivated(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 		});
 		
@@ -291,11 +291,9 @@ public class WindowMacroSetupEditor extends JFrame {
 	
 	
 	/**
-	 * Inizializza i callback della GUI
+	 * Init the callback of the GUI
 	 */
 	private void initCallback() {
-
-		
 		mniLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String path = macroSetupFileChooser(false);
@@ -310,13 +308,14 @@ public class WindowMacroSetupEditor extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					}
 					
-					if(setup != null) { //Caricamento ha avuto successo
-						// Elimino le vecchie macro screen
+					// The loading has succes
+					if(setup != null) {
+						// Delete the old MacroScreens
 						for(MacroScreen s : editor.getMacroScreens()) {
 							editor.removeMacroScreen(s);
 						}
 						
-						// Carico le nuove macro screen
+						// Load the new MacroScreens
 						for(final MacroScreen sc : setup.getMacroScreens()) {
 							editor.addMacroScreen(sc);
 						}
@@ -416,8 +415,8 @@ public class WindowMacroSetupEditor extends JFrame {
 							"Are you sure to delete the selected screen?",
 							"Conferm action",
 							JOptionPane.YES_NO_OPTION);
+					
 					if(selection == JOptionPane.YES_OPTION) {
-						// Rimuovo la macro screen selezionata
 						editor.removeMacroScreen(e.getMacroScreen());
 					}
 				}
@@ -463,9 +462,9 @@ public class WindowMacroSetupEditor extends JFrame {
 						
 						@SuppressWarnings("unchecked")
 						List<MacroKey> k = (List<MacroKey>)o;
-						// Aggiungo i tasti
 						mse.add(k);
-						// Seleziono i tasti aggiunti
+						
+						// Added keys are selected
 						mse.select(k, true);
 						
 					}
@@ -488,7 +487,7 @@ public class WindowMacroSetupEditor extends JFrame {
 				if(e != null) {
 					List<MacroKey> sel = e.getMacroKeySelected();
 					if(!sel.isEmpty()) {
-						// Sposto il primo elelemnto della selezione
+						// Shift the first element of the selection
 						e.moveMacroKeyUp(sel.get(0));
 					}
 				}
@@ -501,7 +500,7 @@ public class WindowMacroSetupEditor extends JFrame {
 				if(e != null) {
 					List<MacroKey> sel = e.getMacroKeySelected();
 					if(!sel.isEmpty()) {
-						// Sposto il primo elelemnto della selezione
+						// Shift the first element of the selection
 						e.moveMacroKeyDown(sel.get(0));
 					}
 				}
@@ -553,10 +552,9 @@ public class WindowMacroSetupEditor extends JFrame {
 	
 	
 	/**
-	 * Mostra un {@link JFileChooser} per il salvataggio o l'apertura di
-	 * una {@link MacroSetup}
-	 * @param mode True: salvataggio; False: caricamento
-	 * @return Path al file selezionato; null se operazione annullata
+	 * Show a {@link JFileChooser} for saving or loading a {@link MacroSetup}
+	 * @param mode True: save; False: loading
+	 * @return Path of the selected file choosen by the user; null if user cancelled the operation
 	 */
 	private String macroSetupFileChooser(boolean mode) {
 		JFileChooser f = new JFileChooser();
@@ -586,9 +584,11 @@ public class WindowMacroSetupEditor extends JFrame {
 
 	
 	
-
+	/**
+	 * Select the given {@link MacroScreen}
+	 * @param pos Position of the {@link MacroScreen} to select
+	 */
 	private void selectMacroScreen(MacroScreen.SwipeType pos) {
-		// Seleziono la MacroScreen avente la posizione indicata
 		for(MacroScreen m : editor.getMacroScreens()) {
 			if(m.getSwipeType().equals(pos)) {
 				editor.selectMacroScreen(m);
@@ -600,15 +600,18 @@ public class WindowMacroSetupEditor extends JFrame {
 	
 	
 	/**
-	 * Gestisce i menù relativi alle maschere.
+	 * Manage the menus of the mask
 	 */
 	private static class MenuMaskManager implements MasksManagerListener {
 
 		private final JMenu menuMasks;
+		
 		private final MasksManager manager;
-		/** Menù item nel caso se nessuna Mask deve essere selezionata */
+		
+		/** Menu item in case if no Mask must be selected */
 		private final JCheckBoxMenuItem noneMask;
-		/** Menù per i menù rappresentanti le maschere contenenti nel manager */
+		
+		/** Menu for the items rapresenting the Masks contained in the manager */
 		private final List<JCheckBoxMenuItem> menuItems = new ArrayList<>();
 		
 		
@@ -619,7 +622,8 @@ public class WindowMacroSetupEditor extends JFrame {
 			this.menuMasks = menuMasks;
 			this.manager = manager;
 			this.noneMask = new JCheckBoxMenuItem("None");
-			// Per impedire all'utente di deselezionare l'item
+			
+			// To prevent the user from deselection the item
 			this.noneMask.setModel(new DefaultButtonModel());
 			this.noneMask.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -655,22 +659,23 @@ public class WindowMacroSetupEditor extends JFrame {
 		
 		
 		/**
-		 * Ripolola il menù eliminando gli item già presenti e ne aggiunge in
-		 * base all'attuale stato del manager
+		 * Repopulate the m enu deleting the items already present and adding
+		 * new items relaying on the current status of the manager
 		 */
 		private void repopulateMenu() {
-			// Seleziono se nessuna maschera selezionata
+			// Select if no mask is selected
 			this.noneMask.setState(manager.getSelected() == null);
 			
-			// Rimuovo i menù esistenti
+			// Remove the existing menus
 			for(JCheckBoxMenuItem it : menuItems) {
 				menuMasks.remove(it);
 			}
 			
-			// Inserisco i menù
+			// Adding the menus
 			for(Mask m : manager.getMasks()) {
 				JCheckBoxMenuItem it = new JCheckBoxMenuItem();
-				// Per impedire all'utente di deselezionare l'item
+				
+				// To prevent the user from deselection the item
 				it.setModel(new DefaultButtonModel());
 				it.setText(m.toString());
 				it.setState(m == manager.getSelected());

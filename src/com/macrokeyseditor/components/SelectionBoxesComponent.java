@@ -27,37 +27,43 @@ import org.eclipse.jdt.annotation.NonNull;
 @SuppressWarnings("serial")
 public class SelectionBoxesComponent<T> extends Component implements ItemSelectable {
 	
-	/** Colore del background */
+	/** Background color */
 	private static final Color COLOR_BACKGROUND = new Color(164, 164, 164);
-	/** Colore del background dell'item selezionato */
-	private static final Color COLOR_BACKGROUND_SELECTED =
-			new Color(100, 100, 100);
+	
+	/** Background color for the selected item */
+	private static final Color COLOR_BACKGROUND_SELECTED = new Color(100, 100, 100);
+	
 	private static final Color COLOR_BORDERS = new Color(57, 57, 57);
 	private static final Color COLOR_BACKGROUND_OVER =
 			new Color(200, 200, 200);
 	private static final Color COLOR_FONT = Color.BLACK;
 	
-	/** Bordo con il controllo */
+	/** Border inside the control */
 	private static final int BORDER_CONTROL = 5;
-	/** Bordo tra un item e il separatore */
+	
+	/** Border between the item and its separator */
 	private static final int BORDER_ITEM_SEPARATOR = 5;
-	/** Distanza tra items */
+	
+	/** Distance between items */
 	private static final int BORDER_ITEMS = BORDER_ITEM_SEPARATOR * 2;
 	
-	/** Rotondità del rettangolo, asse X */
+	/** Roundness of the rectangle int the X axis */
 	private static final int ARC_WIDTH = 10;
-	/** Rotondità del rettangolo, asse Y */
+	
+	/** Roundness of the rectangle int the Y axis */
 	private static final int ARC_HEIGHT = 10;
 	
 	
-	/** Elementi selezionabili dal componenete */
+	/** Selectionable items from the component */
 	private final List<T> items = new ArrayList<>();
-	/** Indice dell'item che ha il cursore sopra; -1 se nessuno */
+	
+	/** Index of the item that has the cursor over it; -1 if none */
 	private int mouseOverIndex = -1;
-	/** Elemento attualmente selezionato; -1 sse {@link items} è vuota */
+	
+	/** Selected item; -1 iif {@link #items} is empty */
 	private int selectedIndex = -1;
 	
-	/** Listener per gli eventi */
+	/** Event listener */
 	private ItemListener itemListener;
 	
 	
@@ -92,7 +98,7 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// All'uscita mouse over disabilitato
+				// At the exit mouse over disabled
 				mouseOverIndex = -1;
 				repaint();
 			}
@@ -114,8 +120,8 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * @param x Posizione del cursore
-	 * @return Indice dell'item su cui si trova il cirsore; -1 se nessuno
+	 * @param x Cursor posizione
+	 * @return Index of the item that has the cursor over it; -1 if none
 	 */
 	private int indexCursor(int x) {
 		if(items.isEmpty()) {
@@ -128,8 +134,7 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * Genera l'evento di selezione. Viene considerato come nuovo
-	 * elemento selezionato quello correntemente selezionato.
+	 * Generates the selection event. The new selected istem is the current selected one.
 	 */
 	private void generateChangeSelectionEvent() {
 		if(itemListener == null) {
@@ -177,16 +182,16 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	}
 	
 	/**
-	 * Imposta i valori possibili per gli items
-	 * @param values Valori da impostare; non null, item contenuti non null
+	 * Sets the possible values fro the items
+	 * @param values Value to set; contained items must be not null
 	 */
 	public void setItems(@NonNull T[] values) {
 		setItems(Arrays.asList(values));
 	}
 	
 	/**
-	 * Imposta i valori possibili per gli items
-	 * @param values Valori da impostare; non null, item contenuti non null
+	 * Sets the possible values fro the items
+	 * @param values Value to set; contained items must be not null
 	 */
 	public void setItems(@NonNull Collection<T> values) {
 		items.clear();
@@ -205,9 +210,9 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * Imposta l'elemento attualmente selezionato
-	 * @param item Elemento da selezionare; non null
-	 * @throws IllegalArgumentException Se l'elelemtno non viene trovato
+	 * Sets the item to select
+	 * @param item Item to select
+	 * @throws IllegalArgumentException If the item is not present
 	 */
 	public void setSelectedItem(@NonNull T item) {
 		int i = items.indexOf(item);
@@ -221,19 +226,17 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * Aggiunge un item alla collezione.
-	 * L'elemenyo non deve essere già presente, la ricerca viene
-	 * eseguita tramite {@link Object#equals(Object)}
-	 * @param item Item da inserire
-	 * @throws IllegalArgumentException Se è già stata inserito lo stesso elemento
+	 * Add an item to the collection.
+	 * The given item must be not already present, the search is done using {@link Object#equals(Object)}
+	 * @param item Item to add
+	 * @throws IllegalArgumentException If the item was already present
 	 */
 	public void addItem(@NonNull T item) {
 		if(items.contains(item)) {
 			throw new IllegalArgumentException("Item already present");
 		}
 		
-		// Se la lista è vuota marchio come selezionato il primo elemento
-		// inserito
+		// If the list is empty the selected item becomes the first inserted
 		if(items.isEmpty()) {
 			selectedIndex = 0;
 		}
@@ -244,10 +247,10 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * Rimuove l'elemento indicato dagli item.
-	 * Ricerca eseguita tramite {@link Object#equals(Object)}
-	 * @param item Item da rimuovere (confronto tra istanze
-	 * @throws IllegalArgumentException Se l'elemento non viene trovato
+	 * Remove the item.
+	 * The search is done by using {@link Object#equals(Object)}
+	 * @param item Item to remove
+	 * @throws IllegalArgumentException If the element was not found
 	 */
 	public void removeItem(@NonNull T item) {
 		if(!items.remove(item)) {
@@ -268,7 +271,7 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	public void paint(Graphics gg) {
 		super.paint(gg);
 		
-		// Caso niente da renderizzare
+		// Nothing to render
 		if(items.isEmpty()) {
 			return;
 		}
@@ -280,7 +283,7 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 				(items.size() - 1) * BORDER_ITEMS);
 		int spaceItem = utilSpace / items.size();
 	
-		// Rendering sfondo e relativo contorno
+		// Background rendering and the border
 		g.setColor(COLOR_BACKGROUND);
 		g.fillRoundRect(0,
 				0,
@@ -304,12 +307,12 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 
 		g.setFont(getFont());
 		
-		/** Cursore per la coordinata x del rettangolo che contiene la stringa
-		 * dell'item attuale
-		 */
+		
+		// Cursor for the x axis of the rectangòe that contains the string of the actual item
 		int x = BORDER_CONTROL;
 		int i = 0;
-		// Rendering scritte e separatori
+		
+		// Text and separators rendering
 		for(T item : items) {
 			String str = item.toString();
 			g.setColor(COLOR_FONT);
@@ -327,60 +330,60 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	}
 	
 	/**
-	 * Disegna il baground di un item indicato.
-	 * Rendering non effettuato se {@code indexItem} < 0.
-	 * @param g Grafica per il rendering; non null
-	 * @param indexItem Indice dell'item in questione
-	 * @param spaceItem Dimensione di un item (senza bordi)
-	 * @param color Colore del background
+	 * Draw the background fot a n item.
+	 * Rendering not done if {@code indexItem} < 0.
+	 * @param g Graphics for the rendering
+	 * @param indexItem Index of the item to render
+	 * @param spaceItem Size of an item (with no borders)
+	 * @param color Background color
 	 */
 	private void paintBackgroundOf(@NonNull Graphics2D g, int indexItem,
 			int spaceItem, @NonNull Color color) {
-		// Controllo che l'indice sia valido
 		if(indexItem < 0) {
 			return;
 		}
 		
 		
 		g.setColor(color);
-		// Caso bisogna evidenziare il primo item
+		
+		// Case the first item needs to be hilighted
 		if(indexItem == 0) {
-			// Imposto la clip per la parte non arrotondata del rounded
-			// rectangle
+			// Set the clip for the not rounded portion of the rounded rectangle
 			g.setClip(0,
 					0, 
 					BORDER_CONTROL + spaceItem + BORDER_ITEM_SEPARATOR,
 					getHeight());
-			// Disegno un rounded rectangle più grande del necessario
-			// (l'eccesso viene clippato)
+			
+			// Draw the rounded rectangle bigger than needed because the excess is clipped
 			g.fillRoundRect(0,
 					0,
 					getWidth(),
 					getHeight() - 1,
 					ARC_WIDTH,
 					ARC_HEIGHT);
-			// Re-impostazione del clip
+			
+			// Reset the clip size
 			g.setClip(0, 0, getWidth(), getHeight());
 			
-		} 
-		// Caso bisogna evidenziare l'ultimo item
+		}
+		// Case the last item needs to be hilighted
 		else if(indexItem == items.size() - 1) {
-			// Imposto la clip per la parte non arrotondata del rounded
-			// rectangle
+			// Set the clip for the not rounded portion of the rounded rectangle
 			g.setClip(getWidth() - (BORDER_CONTROL + spaceItem + 
 						BORDER_ITEM_SEPARATOR),
 					0, 
 					getWidth(),
 					getHeight());
-			// Disegno un rounded rectangle più grande del necessario
-			// (l'eccesso viene clippato)
+			
+			// Set the clip for the not rounded portion of the rounded rectangle
 			g.fillRoundRect(0,
 					0,
 					getWidth(),
 					getHeight() - 1,
 					ARC_WIDTH,
 					ARC_HEIGHT);
-			// Re-impostazione del clip
+			
+			// Reset the clip size
 			g.setClip(0, 0, getWidth(), getHeight());
 			
 		} else {
@@ -396,12 +399,12 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * Ottiene i limiti della stringa in pixel
-	 * @param g2 Grafica utilizzata per il rendering
-	 * @param str Stringa da renderizzare
-	 * @return Delimitazione della stringa in pixel
+	 * Gests the bound of the string in pixels
+	 * @param g2 Graphics to use for the rendering
+	 * @param str String to render
+	 * @return Bound for the string in pixels
 	 */
-	private static Rectangle getStringBounds(Graphics2D g2, String str) {
+	private static Rectangle getStringBounds(@NonNull Graphics2D g2, String str) {
 		FontRenderContext frc = g2.getFontRenderContext();
 		GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
 		return gv.getPixelBounds(null, 0, 0);
@@ -411,13 +414,13 @@ public class SelectionBoxesComponent<T> extends Component implements ItemSelecta
 	
 	
 	/**
-	 * Centra la stringa nel rettangolo indicato
-	 * @param g Grafica da utilizzare per il rendering della scritta; non null
-	 * @param str Stringa da renderizzare; non null
-	 * @param x Coordinata X del punto in altro a sx del rettangolo
-	 * @param y Coordinata Y del punto in altro a sx del rettangolo
-	 * @param width Lunghezza (asse X) del rettangolo
-	 * @param height Altezza (asse Y) del rettangolo
+	 * Center the string in the rectangle
+	 * @param g Graphics to use for the rendering
+	 * @param str String to render
+	 * @param x X coordinate of the point in the top left of the rectangle
+	 * @param y X coordinate of the point in the top left of the rectangle
+	 * @param width Lenght of the rectangle (X axis)
+	 * @param height Height of the rectangle (Y axis)
 	 */
 	private static void drawCenteredString(@NonNull Graphics2D g,
 			@NonNull String str, int x, int y, int width, int height) {

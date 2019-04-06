@@ -11,7 +11,7 @@ import com.macrokeys.MacroScreen;
 import com.macrokeys.MacroSetup;
 
 /**
- * Consente di modificare una {@link MacroSetup}.
+ * Allows you to edit a {@link MacroSetup}
  */
 public class MacroSetupEditor {
 	
@@ -20,7 +20,7 @@ public class MacroSetupEditor {
 	
 	private final EventListenerList listeners = new EventListenerList();
 	
-	/** Schermata attualmente selezionata; null se nessuna */
+	/** Screen actually selected; null if none */
 	private MacroScreenEditor selected;
 	
 	
@@ -30,7 +30,7 @@ public class MacroSetupEditor {
 	
 	
 	/**
-	 * @return {@link MacroScreenEditor} attualmente selezionata; null se nessuna
+	 * @return {@link MacroScreenEditor} selected; null if none
 	 */
 	public MacroScreenEditor getMacroScreenEditorSelected() {
 		return selected;
@@ -82,12 +82,12 @@ public class MacroSetupEditor {
 	
 	
 	/**
-	 * Permette di selezionare una particolare {@link MacroScreen}
-	 * @param m MacroScreen da selezionare; null per nessuna
-	 * @throws IllegalArgumentException Se la {@code m} non è presente
+	 * Select a {@link MacroScreen}
+	 * @param m {@link MacroScreen} to select; null if none
+	 * @throws IllegalArgumentException If the {@code m} is not present
 	 */
 	public void selectMacroScreen(MacroScreen m) {
-		// Controllo che la selezione sia diversa da quella attuale
+		// Check that the selection is different from the actual
 		if((selected == null && m == null) ||
 				(selected != null && selected.getMacroScreen() == m)) {
 			return;
@@ -109,9 +109,9 @@ public class MacroSetupEditor {
 	
 	
 	/**
-	 * @return Elenco di {@link MacroScreen} contenute; non null
+	 * @return {@link MacroScreen}s contained
 	 */
-	public MacroScreen[] getMacroScreens() {
+	public @NonNull MacroScreen[] getMacroScreens() {
 		MacroScreen[] r = new MacroScreen[screens.size()];
 		int i = 0;
 		for(MacroScreenEditor e : screens) {
@@ -125,24 +125,18 @@ public class MacroSetupEditor {
 	
 	
 	/**
-	 * @return Numero di {@link MacroScreen} contenute; >= 0
+	 * @return Number of contained {@link MacroScreen}; always >= 0
 	 */
 	public int getMacroScreenCount() {
 		return screens.size();
 	}
-	
-	
-	/*
-	public MacroScreenEditor macroScreenEditorFrom(@NonNull MacroScreen m) {
-		
-	}*/
 
 
 
 
 	/**
-	 * Rimuove, se presente, l'istanza della {@link MacroScreen} indicata.
-	 * @param m Istanza da rimuovere
+	 * Remo the instance of {@link MacroScreen}, if present
+	 * @param m Instance to remove
 	 */
 	public void removeMacroScreen(@NonNull MacroScreen m) {
 		ListIterator<MacroScreenEditor> it = screens.listIterator();
@@ -151,9 +145,9 @@ public class MacroSetupEditor {
 			if(e.getMacroScreen() == m) {
 				it.remove();
 				
-				// Se è selezionata allora la deseleziono
+				// Check if the MacroScreen to remove is selected
 				if(e == selected) {
-					// Seleziono una schermata altrnativa
+					// Select another MacroScreen
 					selected = screens.isEmpty() ? null : screens.get(0);
 					fireSelectionChange(e, selected);
 				}
@@ -166,10 +160,9 @@ public class MacroSetupEditor {
 	
 	
 	/**
-	 * Ricerca la {@link MacroScreenEditor} avente la {@link MacroScreen}
-	 * specificata
-	 * @param m MacroScreen da trovare
-	 * @return {@link MacroScreenEditor} associato a {@code m}
+	 * Find the {@link MacroScreenEditor} containing the given {@link MacroScreen}
+	 * @param m {link MacroScreen} to find
+	 * @return {@link MacroScreenEditor} associated to {@code m}
 	 */
 	private MacroScreenEditor find(@NonNull MacroScreen m) {
 		for (MacroScreenEditor e : screens) {

@@ -6,63 +6,65 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /** 
- * Azione di modifica a un campo di un insieme di oggetti.
- * Unisce azioni effettuate per lo stesso oggetto e stesso attributo sse
- * il delay di esecuzione tra una modifica e l'altra è pari al parametro
- * {@code maxElapsedTime} passato al costruttore.
+ * {@link Action} of an field edit of a set of objects.
+ * <p>
+ * Merge the action iif the time elapsed between the elapsed action is less or
+ * equal to {@code maxElapsedTime} 
+ * </p>
  */
 public class ModifyAction<T> extends Action {
 
-	/** 
-	 * Memorizza tutte le istanze con i valori vecchi e nuovi
-	 */
+	/** Store all values of the fields of the objects */
 	private final List<State> instancesValues = new ArrayList<>();
-	/** Istenze le cui proprietà vengono modificate */
+	
+	/** Instances of the edited objects */
 	private final List<T> instances;
 	
 	private final Method mSet;
 	private final String propertyName;
+	
 	/** 
-	 * Massimo tempo trascorso dall'ultima azione dello stesso tipo per
-	 * poterle unure
+	 * Maximum elapsed time to merge two {@link ModifyAction}
 	 */
 	private final int maxElapsedTime;
 	
 	/**
-	 * @param name Nome dell'attributo da considerare (es. age, weight, length, ...)
-	 * @param sets Lista di coppie (istanza, nuovo_valore), dove l'sitanza è il
-	 * soggetto al set e get e il nuovo_valore è il nuovo valore desiderato da
-	 * settare
-	 * @param maxElapsedTime Massimo tempo trascorso dall'ultima azione dello
-	 * stesso tipo per poterle unire
-	 * @throws NullPointerException Se {@code name == null} o {@code obj == null}
-	 * @throws NoSuchMethodException Se uno tra get(+name) o set(+name) non esiste
-	 * @throws SecurityException Se i metodi get e set relativi non sono accessibili
-	 * @throws IllegalAccessException Se la definizione dei metodi non è presente
-	 * @throws IllegalArgumentException Se il parametro per il setter non è corretto
-	 * o la lista{@code obj} è vuota
-	 * @throws InvocationTargetException Se il getter o setter genera un'eccezione
+	 * @param name Name of the field to edit (es. age, weight, length, ...)
+	 * @param sets List of couples (instance, new value) where the instance is
+	 * the object subject to the edit and the new value is the new value to set
+	 * @param maxElapsedTime Maximum elapsed time to merge two {@link ModifyAction}
+	 * @throws NoSuchMethodException If one method {@code get}(+name) or
+	 * {@code set}(+name) does not exists
+	 * @throws SecurityException If the set or get methods are not accessible
+	 * @throws IllegalAccessException If the set or get methods are not present
+	 * @throws IllegalArgumentException If the parameter of the set is not correct
+	 * @throws IllegalArgumentException If {@code sets} is empty
+	 * @throws InvocationTargetException If the get or the set generates exceptions
 	 */
-	public ModifyAction(String name, List<Set<T>> sets, int maxElapsedTime)
+	public ModifyAction(@NonNull String name, @NonNull List<Set<T>> sets, int maxElapsedTime)
 			throws NullPointerException, NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(name == null) {
 			throw new NullPointerException("Parameter 'name' and 'obj' must be not null");
 		} else
-		//Mi assicuro che la prima lettera sia in maiuscolo (convezione per il set e get)
+			
+		// The first letter must be uppercase
 		if(!Character.isUpperCase(name.charAt(0))) {
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		} else if(sets.isEmpty()) {
 			throw new IllegalArgumentException("Sets list empty");
 		}
 		
+		final String getter = "get" + name;
+		final String setter = "set" + name;
+		
 		Class<?> templateClass = sets.get(0).instance.getClass();
-		String getter = "get" + name;
 		Method mGet = templateClass.getMethod(getter);
 		
-		String setter = "set" + name;
-		//Ottengo il setter grazie al tipo ritornato dal getter
+		// The return type of the get find the correct set
 		mSet = templateClass.getMethod(setter, mGet.getReturnType());
 		
 		
@@ -76,7 +78,6 @@ public class ModifyAction<T> extends Action {
 			mSet.invoke(s.instance, s.value);
 			
 			instancesValues.add(p);
-			// Aggiungo l'istanza alle istanze modificate
 			instances.add(s.instance);
 		}
 		
@@ -88,7 +89,7 @@ public class ModifyAction<T> extends Action {
 	
 	
 	/**
-	 * @return Nome della properietà che si va a modificare
+	 * @return Name of the field that is modified
 	 */
 	public String getPropertyName() {
 		return propertyName;
@@ -96,10 +97,10 @@ public class ModifyAction<T> extends Action {
 	
 	
 	/**
-	 * @return Istanze sulle quali vengono apportate le modifiche
+	 * @return Instances where the edit is done
 	 */
 	public List<T> getObject() {
-		return instances;
+		return instances; // TODO: unmodifiable list?
 	}
 	
 	
@@ -142,8 +143,7 @@ public class ModifyAction<T> extends Action {
 		@SuppressWarnings("unchecked")
 		ModifyAction<T> fa = (ModifyAction<T>)followingAction;
 		
-		// Controllo che siano modifiche dello stesso attributo e della stesso
-		// insieme di oggetti
+		// Check if the edit is done at the same field and the same instances
 		if(propertyName.equals(fa.propertyName) &&
 				sameInstances(fa.instancesValues, instancesValues)) {
 			for(State s : fa.instancesValues) {
@@ -160,12 +160,12 @@ public class ModifyAction<T> extends Action {
 	
 	
 	/**
-	 * Trova lo stato avente l'istanza indicata
-	 * @param instance Istanza da trovare
-	 * @param l Lista sulla quale fare la ricerca
-	 * @return State contenente l'istanza indicata; null se non trovata
+	 * Finds the instance of the instance
+	 * @param instance Instance to find
+	 * @param l List where do the search
+	 * @return {@link State} of the instance; null if not found
 	 */
-	private State findState(T instance, List<State> l) {
+	private State findState(@NonNull T instance, @NonNull List<State> l) {
 		assert instance != null && l != null;
 		
 		for(State s : l) {
@@ -178,10 +178,10 @@ public class ModifyAction<T> extends Action {
 	
 	
 	/**
-	 * Indica se le due liste (senza ripetizioni) hanno le stesse istanze.
-	 * @param a Prima lista; senza ripetizioni di elelmenti
-	 * @param b Seconda lista; senza ripetizioni di elelmenti
-	 * @return True se le due liste hanno le stese istanze
+	 * Check if two lists have the same instances. Each list must not contain duplications
+	 * @param a First list
+	 * @param b Second list
+	 * @return True if the two lists have the same instances
 	 */
 	private boolean sameInstances(List<State> a, List<State> b) {
 		if(a.size() != b.size()) {
@@ -195,11 +195,10 @@ public class ModifyAction<T> extends Action {
 	
 	
 	/**
-	 * Indica se le istanze di {@code a} sono contenute in {@code b}
-	 * @param a Lista sorgente delle istanze
-	 * @param b Lista da verificare
-	 * @return True se le istanze di {@code a} sono contenute in {@code b},
-	 * False altrimenti
+	 * Checks if the instances of {@code a} are contained in {@code b}
+	 * @param a List a
+	 * @param b List b
+	 * @return True if instances of {@code a} are contained in {@code b}, false otherwise
 	 */
 	private boolean sameInstancesOfAInB(List<State> a, List<State> b) {
 		for(State s : a) {
@@ -228,23 +227,23 @@ public class ModifyAction<T> extends Action {
 	
 	
 	/**
-	 * Struttura dati perla madifica del valore ({@link #value}) di una
-	 * proprietà (qui non indicata) ad una particolare istanza
-	 * ({@link #instance}) di un oggetto
-	 * @param <T> Classe soggetta alla modifica della proprietà
+	 * Data structure for the edit of ({@link #value}) of a field of an instance
+	 * @param <T> Class type subject toe the field edit
 	 */
 	public static class Set<T> {
-		/** Soggetto alla modifica */
+		/** Instance subject to the edit */
 		public final T instance;
-		/** Valore della modifica */
+		
+		/** New value for the field */
 		public final Object value;
 		
 		/**
-		 * @param instance Soggetto alla modifica
-		 * @param value Valore della modifica
+		 * @param instance Instance subject of the edit
+		 * @param value New value for the field
 		 */
-		public Set(T instance, Object value) {
+		public Set(@NonNull T instance, Object value) {
 			Objects.requireNonNull(instance);
+			
 			this.instance = instance;
 			this.value = value;
 		}

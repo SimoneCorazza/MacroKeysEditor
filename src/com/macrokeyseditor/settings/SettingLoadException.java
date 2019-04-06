@@ -8,7 +8,7 @@ public class SettingLoadException extends Exception {
 	
 	
 	/**
-	 * @param motive Motivo dell'errore
+	 * @param motive Reason of the error
 	 */
 	public SettingLoadException(Motive motive) {
 		Objects.requireNonNull(motive);
@@ -18,7 +18,7 @@ public class SettingLoadException extends Exception {
 	
 	
 	/**
-	 * @return Motivo dell'errore
+	 * @return Reason of the error
 	 */
 	public Motive getMotive() {
 		return motive;
@@ -27,9 +27,10 @@ public class SettingLoadException extends Exception {
 	
 	
 	public enum Motive {
-		/** File d'impostazione non trovata */
+		/** Setting file not found */
 		SettingFileNotFound,
-		/** File d'impostazione non formato correttamente */
+		
+		/** Setting file not formatted correctly */
 		SettingFileCompromized
 	}
 }

@@ -13,7 +13,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import com.macrokeys.MacroKey;
 
 /** 
- * Trasferimento mediante copia incolla per {@link MacroKey}
+ * Transfer by copy paste of {@link MacroKey}
  * <p>Tutorial: http://stackoverflow.com/questions/14276182/java-use-clipboard-to-copy-paste-java-objects-between-different-instances-of-sa</p>
  */
 public final class MKTransfer implements Transferable {
@@ -22,7 +22,7 @@ public final class MKTransfer implements Transferable {
 	private final List<MacroKey> t;
 	
 	/**
-	 * @param l Lista di tasti
+	 * @param l Key list
 	 */
 	public MKTransfer(@NonNull List<MacroKey> l) {
 		Objects.requireNonNull(l);

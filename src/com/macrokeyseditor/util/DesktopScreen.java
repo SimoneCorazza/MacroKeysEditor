@@ -5,12 +5,14 @@ import java.awt.Toolkit;
 
 import com.macrokeys.screen.*;
 
-/** */
+/**
+ * Class that implements the {@code Screen} interface for a desktop platform
+ */
 public class DesktopScreen extends Screen {
 	Toolkit toolkit;
 	
 	/**
-	 * Nuovo schermo principale
+	 * @throws ScreenException In case of error loading the desktop screen
 	 */
 	public DesktopScreen() throws ScreenException {
 		try {
@@ -21,7 +23,7 @@ public class DesktopScreen extends Screen {
 	}
 	
 	/**
-	 * @return Dpi sull'asse X dello schermo
+	 * @return Dpi of the X axis of the screen
 	 */
 	public float getXDpi() {
 		assert toolkit != null;
@@ -29,7 +31,7 @@ public class DesktopScreen extends Screen {
 	}
 	
 	/**
-	 * @return Dpi sull'asse Y dello schermo
+	 * @return Dpi of the Y axis of the screen
 	 */
 	public float getYDpi() {
 		assert toolkit != null;

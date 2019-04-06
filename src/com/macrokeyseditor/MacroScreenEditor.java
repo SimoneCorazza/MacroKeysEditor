@@ -20,19 +20,19 @@ import com.macrokeyseditor.fur.ModifyAction;
 
 
 /**
- * Controller (in MVC) che permette la modifica condivisa di una {@link MacroScreen}.
+ * Controller that use an MVC approuch (in MVCthat permists a shared edit to a {@link MacroScreen}.
  * <p>
- * Permmette di:
- * <li>Modificare la {@link MacroScreen} memorizzandone le azioni (funzioni undo e redo)
- * <li>Utilizzando {{@link #addEditEventListener(MacroScreenEditListener)} di essere informati su ogni modifica
+ * Can:
+ * <li>Edit the {@link MacroScreen} storing the crology of the action done (undo e redo)
+ * <li>Subscribing to {{@link #addEditEventListener(MacroScreenEditListener)} you can be notified on every change done
  * <p>
- * Le modifiche dirette (non tramite i metodi di questa classe) non vengono tracciate.
+ * Direct changes are not tracked by this class.
  */
 public class MacroScreenEditor {
 	
 
 	/**
-	 * Tutte le azioni di modifica ({@link ModifyAction}) eseguite per stesso attributo della stessa classe vengono raggruppate
+	 * If a set of action is done in this amount of time is grouped into one action ({@link ModifyAction})
 	 */
 	private static final int MAX_DELAY_BETWEEN_MODIFY= 200;
 	
@@ -53,18 +53,18 @@ public class MacroScreenEditor {
 	
 	private final EventListenerList editList = new EventListenerList();
 	
-	/** Azioni effettuate sulla macro screen */
+	/** Action done to the MacroScreen */
 	private final ActionManager actions;
 	
-	/** Dati sui quali si sta lavorando */
+	/** MacroScreen this is working on */
 	private final MacroScreen macroScreen;
 	
-	/** Tasti attualmente selezionati; mai null */
+	/** Keys actually selected; never null */
 	private final List<MacroKey> selected = new ArrayList<>();
 	
 	
 	/**
-	 * @param m Schermata da modificare tramite this
+	 * @param m Screen to edit
 	 */
 	public MacroScreenEditor(@NonNull MacroScreen m) {
 		this.macroScreen = m;
@@ -74,7 +74,7 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * @return {@link MacroKey} attualmente selezionati
+	 * @return {@link MacroKey} actually selected
 	 */
 	public @NonNull List<MacroKey> getMacroKeySelected() {
 		return new ArrayList<>(selected);
@@ -82,9 +82,8 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Aggiunge un listener per l'evento di modifica della {@link MacroScreen} di
-	 * gestita da this
-	 * @param l Listener da aggiungere
+	 * Adds a listener for an edit event event of {@link MacroScreen}
+	 * @param l Listener to add
 	 */
 	public void addEditEventListener(MacroScreenEditorListener l) {
 		if(l != null) {
@@ -95,9 +94,8 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Rimuove un listener per l'evento di modifica della {@link MacroScreen} di
-	 * gestita da this
-	 * @param l Listener da rimuovere
+	 * Remove a listener for an edit event event of {@link MacroScreen}
+	 * @param l Listener to remove
 	 */
 	public void removeEditEventListener(MacroScreenEditorListener l) {
 		if(l != null) {
@@ -107,7 +105,7 @@ public class MacroScreenEditor {
 	
 	
 	
-	/** @return MacroScreen su cui si opera */
+	/** @return MacroScreen that this edit */
 	public MacroScreen getMacroScreen() {
 		return macroScreen;
 	}
@@ -135,8 +133,8 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Genera l'evento di aggiunta di {@link MacroKey}
-	 * @param mk Tasti aggiunti; la lista viene copiata
+	 * Fire the event of add of a {@link MacroKey}
+	 * @param mk Added keys; this list is cloned
 	 */
 	private void fireAddMacroKey(@NonNull List<MacroKey> mk) {
 		List<MacroKey> copy = new ArrayList<>(mk);
@@ -149,8 +147,8 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Genera l'evento di rimozione di {@link MacroKey}
-	 * @param mk Tasti rimossi; la lista viene copiata
+	 * Fire an event of remove of a {@link MacroKey}
+	 * @param mk Removed keys; this list is cloned
 	 */
 	private void fireRemoveAcroKey(@NonNull List<MacroKey> mk) {
 		List<MacroKey> copy = new ArrayList<>(mk);
@@ -178,9 +176,9 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Indice occupato dall'elemento indicato
-	 * @param k Elemento da trovare
-	 * @return Indice occupato dall'elemento nella collezione; -1 se non trovato
+	 * Index of the given element
+	 * @param k Eleemnt to find
+	 * @return Idex of the given element; -1 if not found
 	 */
 	public int find(@NonNull MacroKey k) {
 		Iterator<MacroKey> it = getMacroScreen().getKeys().iterator();
@@ -197,9 +195,9 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Indica se il {@link MacroKey} indicato è presente
-	 * @param k Tasto da trovare
-	 * @return True se trovato, false altriemnti
+	 * Indicates if the given {@link MacroKey} is present
+	 * @param k Key to find
+	 * @return True if found, false otherwise
 	 */
 	public boolean contains(@NonNull MacroKey k) {
 		return find(k) != -1;
@@ -208,17 +206,16 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Rimuove i tasti indicati dalla {@link MacroScreen}
-	 * @param l Lista di tasti da rumuovere
-	 * @throws NullPointerException Se {@code l} è null
-	 * @throws IllegalArgumentException Se {@code l} è vuota o se un tasto
-	 * è null o non presente all'interno della {@link MacroScreen}
+	 * Remove the given keys form the {@link MacroScreen}
+	 * @param l Keys to remove
+	 * @throws IllegalArgumentException If {@code l} is empty or if an item is null or
+	 * is not present in the edited {@link MacroScreen}
 	 */
 	public void remove(@NonNull List<MacroKey> l) {
-		// Trovo le posizioni dei tasti da rimuovere
+		// Find the position of the keys to remove
 		int[] indices = indicesOf(l);
 		
-		// Deseleziono i tast da rimuovere
+		// Deselect the keys to remove
 		boolean selectedFlag = false;
 		for(MacroKey m : l) {
 			if(isSelected(m)) {
@@ -227,13 +224,13 @@ public class MacroScreenEditor {
 			}
 		}
 		
-		// Segnalo che la selezione è cambiata
+		// Fire the event of selection change
 		if(selectedFlag) {
 			fireSelectionChanged();
 		}
 		
 		
-		// Compongo l'azione della rimozione e la aggiungo
+		// Compose the action for the remove action and add it to the action list
 		RemoveAction r = new RemoveAction(macroScreen);
 		for(int j = 0; j < indices.length; j++) {
 			int index = indices[j];
@@ -246,13 +243,12 @@ public class MacroScreenEditor {
 	}
 	
 	/**
-	 * Ottiene la lista di posizioni occupate in {@link MacroScreen#getKeys()}
-	 * dai {@link MacroKey} nella lista {@code l}
-	 * @param l Lista di tasti
-	 * @return Array di indici corrispondenti alle posizioni dei tasti
-	 * @throws NullPointerException Se {@code l} è null
-	 * @throws IllegalArgumentException Se {@code l} è vuota o se un tasto
-	 * è null o non presente all'interno della {@link MacroScreen}
+	 * Gests the position occupied in the {@link MacroScreen#getKeys()}
+	 * of the {@link MacroKey} in the list {@code l}
+	 * @param l Keys list
+	 * @return Array for the position of each MacroKey in the given list
+	 * @throws IllegalArgumentException If {@code l} is empty or if an item is null or
+	 * is not present in the edited {@link MacroScreen}
 	 */
 	private int[] indicesOf(@NonNull List<MacroKey> l) {
 		if(l == null) {
@@ -261,7 +257,7 @@ public class MacroScreenEditor {
 			throw new IllegalArgumentException("Empty list");
 		}
 		
-		// TODO: eseguire scansione lineare
+		// TODO: execute linear scan
 		int[] indices = new int[l.size()];
 		int i = 0;
 		for(MacroKey m : l) {
@@ -285,9 +281,8 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Indica se il tasto indicao è attulamente selezionato
-	 * @param k Tasto da reficare
-	 * @return True il tato {@code k} è selezionato, False altrimenti
+	 * @param k Key to check
+	 * @return True if the key {@code k} is selected, False otherwise
 	 */
 	public boolean isSelected(@NonNull MacroKey k) {
 		Iterator<MacroKey> it = selected.iterator();
@@ -303,10 +298,10 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Rimuove dalla selezione il tasto indicato, se presente
-	 * @param k Tasto da deselezionare
-	 * @return True se il tasto era presente ed è stato de-selezionato, 
-	 * False altrimenti
+	 * Deselect the given key, if present
+	 * @param k Key to deselect
+	 * @return True if the key was present and was deselected, 
+	 * False otherwise
 	 */
 	public boolean deselect(@NonNull MacroKey k) {
 		return deselect(k, true);
@@ -315,12 +310,11 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Rimuove dalla selezione il tasto indicato, se presente
-	 * @param k Tasto da deselezionare
-	 * @param event True se bisogna generare l'evento associato al cambiamento
-	 * della selezione, False atriemtni
-	 * @return True se il tasto era presente ed è stato de-selezionato, 
-	 * False altrimenti
+	 * Deselect the given key, if present
+	 * @param k Key to deselect
+	 * @param event True if fire the selection changed event false otherwise
+	 * @return True if the key was present and was deselected, 
+	 * False otherwise
 	 */
 	private boolean deselect(@NonNull MacroKey k, boolean event) {
 		Iterator<MacroKey> it = selected.iterator();
@@ -339,7 +333,7 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Deseleziona tutti i tasti attualmente selezionati
+	 * Deselect all selected keys
 	 */
 	public void deselect() {
 		if(!selected.isEmpty()) {
@@ -351,10 +345,10 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Aggiunge oppure imposta la selezione al solo tasto indicato
-	 * @param m Tasto soggetto della selezione
-	 * @param only True imposta il tasto {@code m} come l'unico selezionato,
-	 * False lo aggiunge alla selezione
+	 * Adds or sets the selection of the given key
+	 * @param m Key to select
+	 * @param only True sets the key {@code m} as the only selected key,
+	 * False to add it to the selection
 	 * @throws IllegalArgumentException Se {@code m} null o non presente
      * in this
 	 */
@@ -363,7 +357,7 @@ public class MacroScreenEditor {
 		if(find(m) == -1) {
 			throw new IllegalArgumentException("MacroKey not found");
 		} else if(isSelected(m)) {
-			// Già selezionato
+			// Already selected
 			return;
 		}
 		
@@ -377,16 +371,14 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Seleziona tutti e solo i tasti indicati
-	 * @param l Elenco di tasti da selezionare; non null
-	 * @param only True se solo i tasti indicati vengono selezionati, False per
-	 * aggiungerli alla selezione
-	 * @throws NullPointerException Se {@code l} è null o un suo elemento
-	 * è null
-	 * @throws IllegalArgumentException Se almeno un tasto in {@code l} non è
-	 * presente nella {@link MacroScreen} elaborata
+	 * Select the given keys
+	 * @param l Set of key to select
+	 * @param only True to select only the given keys, False to add them to the selection
+	 * @throws NullPointerException if {@code l} is null or an inner item is null
+	 * @throws IllegalArgumentException If at least one key in {@code l} is not present
+	 * in the edited {@link MacroScreen}
 	 */
-	public void select(List<MacroKey> l, boolean only) {
+	public void select(@NonNull List<MacroKey> l, boolean only) {
 		Objects.requireNonNull(l);
 		// Controllo la presenza dei tasti
 		for(MacroKey m : l) {
@@ -400,18 +392,16 @@ public class MacroScreenEditor {
 			selected.clear();			
 		}
 		
-		// Flag per sapere se c'è stata una modifica alla selezione
 		boolean mod = false;
 		
 		for(MacroKey m : l) {
-			// Se si aggiungono i tasti alla selezione controllo che non siano
-			// già selezionati
+			// Check if the added keys are not already selected
 			if(only || (!only && isSelected(m))) {
 				selected.add(m);
 				mod = true;
 			}
 		}
-		// Genero l'evento solo se c'è una modifica
+		
 		if(mod) {
 			fireSelectionChanged();			
 		}
@@ -419,11 +409,11 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Aggiunge i {@link MacroKey} indicati
-	 * @param l Elementi da aggiungere; non devono essere presenti
-	 * @throws NullPointerException Se {@code l} o un suo elemento è null
-	 * @throws IllegalArgumentException Se almeno un tasto in {@code l} è già
-	 * presente o se {@code l} è vuota
+	 * Adds the given {@link MacroKey}
+	 * @param l Keys to add
+	 * @throws NullPointerException If {@code l} is null or one of its element is null
+	 * @throws IllegalArgumentException If at least one item in {@code l} is laready
+	 * present ot if {@code l} is empty
 	 */
 	public void add(@NonNull List<MacroKey> l) {
 		Objects.requireNonNull(l);
@@ -431,7 +421,7 @@ public class MacroScreenEditor {
 			throw new IllegalArgumentException("List is empty");
 		}
 		
-		// Indice degli inserimenti: tutti in fondo alla lista
+		// Index for the insert
 		int index = macroScreen.getKeys().size();
 		InsertAction ins = new InsertAction(macroScreen);
 		for(MacroKey m : l) {
@@ -449,10 +439,9 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Modifica una proprietà della {@link MacroScreen}
-	 * @param propName Nome della proprietà, elencate in
-	 * {@link MacroScreenEditor}
-	 * @param value Nuovo valore
+	 * Edits a proprety of the {@link MacroScreen}
+	 * @param propName Name of the property, listed in {@link MacroScreenEditor}
+	 * @param value New value
 	 */
 	public void editMacroScreenPropety(@NonNull String propName,
 			Object value) {
@@ -488,12 +477,10 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Modifica il valore di una proprietà di un indieme di {@link MacroKey}
-	 * @param l Tasti da modificare con i rispettivi nuovi valori
-	 * @param propName Nome della proprietà (elencati in
-	 * {@link MacroScreenEdit})
-	 * @throws IllegalArgumentException Se c'è un errore nella modifica
-	 * della proprietà
+	 * Edit the value of a property of a set of {@link MacroKey}
+	 * @param l Keys edited
+	 * @param propName Name of the property
+	 * @throws IllegalArgumentException If there is an error in the edit of the property
 	 */
 	public void editMacroKeyProperty(
 			@NonNull List<ModifyAction.Set<MacroKey>> l,
@@ -517,19 +504,15 @@ public class MacroScreenEditor {
 		fireEditMacroKey(modKeys, propName);
 	}
 	
-	
 	/**
-	 * Modifica il valore di una proprietà di un indieme di {@link MacroKey}
-	 * @param l Tasti da modificare
-	 * @param propName Nome della proprietà (elencati in
-	 * {@link MacroScreenEdit})
-	 * @param value Nuovo valore della proprietà
-	 * @throws IllegalArgumentException Se c'è un errore nella modifica
-	 * della proprietà
+	 * Edit the value of a property of a set of {@link MacroKey}
+	 * @param l Keys edited
+	 * @param propName Name of the property
+	 * @param value New value for the property
+	 * @throws IllegalArgumentException If there is an error in the edit of the property
 	 */
 	public void editMacroKeyProperty(@NonNull List<MacroKey> l,
 			@NonNull String propName, Object value) {
-		// Compongo la lista delle modifiche ripetendo value per ogni elemento
 		List<ModifyAction.Set<MacroKey>> set = new ArrayList<>();
 		for(MacroKey m : l) {
 			set.add(new ModifyAction.Set<MacroKey>(m, value));
@@ -539,9 +522,9 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Sposta il tasto indicato in basso (rispetto all'ordine di rendering dei tasti)
-	 * @param m Tasto da spostare
-	 * @throws IllegalArgumentException Se il tasto non è presente
+	 * Move the key below (in the rendering order)
+	 * @param m Key to move
+	 * @throws IllegalArgumentException If the key is not present
 	 */
 	public void moveMacroKeyDown(@NonNull MacroKey m) {
 		int i = find(m);
@@ -559,10 +542,11 @@ public class MacroScreenEditor {
 	}
 	
 	
+
 	/**
-	 * Sposta il tasto indicato in alto (rispetto all'ordine di rendering dei tasti)
-	 * @param m Tasto da spostare
-	 * @throws IllegalArgumentException Se il tasto non è presente
+	 * Move the key up (in the rendering order)
+	 * @param m Key to move
+	 * @throws IllegalArgumentException If the key is not present
 	 */
 	public void moveMacroKeyUp(@NonNull MacroKey m) {
 		int i = find(m);
@@ -582,13 +566,10 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Cambia di posizione due {@link MacroKey}
-	 * @param i Posizione del primo tasto da spostare nella lista dei tasti
-	 * {@link MacroScreen#getKeys()}
-	 * @param j Posizione del secondo tasto da spostare nella lista dei tasti
-	 * {@link MacroScreen#getKeys()}
-	 * @throws IndexOutOfBoundsException Se gli indici non sono compresi tra
-	 * 0 e l.size()
+	 * Change the position of two {@link MacroKey}
+	 * @param i Index of the first key in the list {@link MacroScreen#getKeys()}
+	 * @param j Index of the second key in the list {@link MacroScreen#getKeys()}
+	 * @throws IndexOutOfBoundsException If indexes are not in the range 0 e l.size()
 	 */
 	private void swapMacroKeys(int i, int j) {
 		List<MacroKey> l = macroScreen.getKeys();
@@ -602,15 +583,13 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Ri-esegue la scorsa modifica annnullata
+	 * Re-execute the last edit that was undone
 	 */
 	public void redo() {
 		Action a = actions.redo();
 		
-		// Caso nessuna azione da fare il redo
 		if(a != null) {
-			// Siccome TUTTE le azioni devo implementare l'intrfaccia
-			// URGuiUpdater
+			// All action must implement the interface GuiUpdater
 			URGuiUpdater v = (URGuiUpdater) a;
 			v.onRedo();
 		}
@@ -619,15 +598,13 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Annulla la scorsa modifica
+	 * Undo the last edit
 	 */
 	public void undo() {
 		Action a = actions.undo();
 		
-		// Caso nessuna azione da fare undo
 		if(a != null) {
-			// Siccome TUTTE le azioni devo implementare l'intrfaccia
-			// URGuiUpdater
+			// All action must implement the interface GuiUpdater
 			URGuiUpdater v = (URGuiUpdater) a;
 			v.onUndo();
 		}
@@ -638,22 +615,23 @@ public class MacroScreenEditor {
 	
 	
 	// ---------------------
-	// CLASSI PER LE AZIONI DELL'ACTION MANAGER
+	// CLASSES FOR THE ACTION OF THE ACTION MANAGER
 	// ---------------------
 	
 	
 	
-	/** Azione di inderimento di un {@link MacroKey} */
+	/** Action of add of a {@link MacroKey} */
 	private class InsertAction extends Action implements URGuiUpdater {
 		
 		final MacroScreen ms;
 		final List<Pair> addList = new ArrayList<>();
-		/** Lista di tasti rimossi, da non modificare */
+		
+		/** List of inserted keys */
 		final List<MacroKey> keys = new ArrayList<>();
 		
 		
 		/**
-		 * @param ms Schermata soggetta all'azione
+		 * @param ms MacroScreen subject ot the edit
 		 */
 		public InsertAction(@NonNull MacroScreen ms) {
 			assert ms != null;
@@ -662,10 +640,9 @@ public class MacroScreenEditor {
 		
 		
 		/**
-		 * Aggiunge un elelemnto facente parte dell'inserimento
-		 * @param index Indice dell'inserimento, inerente allo stato ATTUALE
-		 * della lista
-		 * @param k Tasto da aggiungere
+		 * Adds an item for the insert
+		 * @param index Index of the insert; must be for the CURRENT state of the list
+		 * @param k Key to add
 		 */
 		public void add(int index, @NonNull MacroKey k) {
 			if(index < 0) {
@@ -677,9 +654,9 @@ public class MacroScreenEditor {
 			p.index = index;
 			p.value = k;
 			addList.add(p);
-			// Ordino in base alla posizione nella lista (ordine crescente)
-			// Per evitare che gli elementi successivi l'elemento rimosso
-			// abbiano un indice diverso
+			
+			// Sorting based on the position in the list (increasing order)
+			// To avoid that the next elements of the removed items have a different index
 			addList.sort((a, b) -> Integer.compare(a.index, b.index));
 			keys.add(k);
 		}
@@ -704,8 +681,7 @@ public class MacroScreenEditor {
 		
 		@Override
 		public void execute() {
-			// Aggiungo in ordine crescente => gli indici successivi saranno
-			// sfasati di 1 per ogni aggiunta
+			// Add in an increasing order => shift the indexes of 1 for each added item
 			ListIterator<Pair> it = addList.listIterator();
 			int c = 0;
 			while(it.hasNext()) {
@@ -735,17 +711,18 @@ public class MacroScreenEditor {
 	}
 	
 	/** 
-	 * Azione di rimozione di un insieme di {@link MacroKey}
+	 * Remove action for a {@link MacroKey}
 	 */
 	private class RemoveAction extends Action implements URGuiUpdater {
 		
 		final MacroScreen ms;
 		final List<Pair> removeList = new ArrayList<>();
-		/** Lista di tasti rimossi, da non modificare */
+		
+		/** List of removed keys */
 		final List<MacroKey> keys = new ArrayList<>();
 		
 		/**
-		 * @param ms Schermata soggetta all'azione
+		 * @param ms MacroScreen subject ot the edit
 		 */
 		public RemoveAction(@NonNull MacroScreen ms) {
 			assert ms != null;
@@ -754,10 +731,9 @@ public class MacroScreenEditor {
 		
 		
 		/**
-		 * Aggiunge un elemento facente parte della rimozione
-		 * @param index Indice della rimozione inerente allo stato ATTUALE
-		 * della lista
-		 * @param k Elemento rimosso
+		 * Adds a removed key
+		 * @param index Index of the insert; must be for the CURRENT state of the list
+		 * @param k Item to remove
 		 */
 		public void remove(int index, MacroKey k) {
 			Pair p = new Pair();
@@ -765,9 +741,9 @@ public class MacroScreenEditor {
 			p.value = k;
 			
 			removeList.add(p);
-			// Ordino in base alla posizione nella lista (ordine crescente)
-			// Per evitare che gli elementi successivi l'elemento rimosso
-			// abbiano un indice diverso
+			
+			// Sorting based on the position in the list (increasing order)
+			// To avoid that the next elements of the removed items have a different index
 			removeList.sort((a, b) -> Integer.compare(a.index, b.index));
 			keys.add(k);
 		}
@@ -787,7 +763,7 @@ public class MacroScreenEditor {
 		
 		@Override
 		public void execute() {
-			// Elimino in ordine inverso per non alterare gli indici
+			// Delete the items in inverse order to not alterate the index
 			ListIterator<Pair> it = removeList.listIterator(removeList.size());
 			while(it.hasPrevious()) {
 				Pair p = it.previous();
@@ -816,8 +792,7 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Azione di cambiamento di posizione di un tasto
-	 * nella relativa lista
+	 * Action for swapt two {@link MacroKey}
 	 */
 	private class SwapAction extends Action implements URGuiUpdater {
 
@@ -826,9 +801,9 @@ public class MacroScreenEditor {
 		final int j;
 		
 		/**
-		 * @param m MacroScreen su cui si sta lavorando
-		 * @param i Posizione in {@link MacroScreen#getKeys()} da scambiare
-		 * @param j Posizione in {@link MacroScreen#getKeys()} da scambiare
+		 * @param m MacroScreen of the MacroKeys
+		 * @param i Index in {@link MacroScreen#getKeys()} of the first {@link MacroKey} to swap
+		 * @param j Index in {@link MacroScreen#getKeys()} of the second {@link MacroKey} to swap
 		 */
 		public SwapAction(@NonNull MacroScreen m, int i, int j) {
 			this.m = m;
@@ -847,13 +822,13 @@ public class MacroScreenEditor {
 		}
 
 		
-		/** Effettua lo scambio */
+		/** Do the swap */
 		private void swap() {
 			List<MacroKey> l = m.getKeys();
 			MacroKey mi = l.get(i);
 			MacroKey mj = l.get(j);
 			
-			//L'ordine è molto importante
+			// The order of the following instruction is very important
 			l.remove(i);
 			l.add(i, mj);
 			l.remove(j);
@@ -883,10 +858,10 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Azione che modifica {@link ModifyAction} per implementare {@link Visitor}
+	 * Action that edits {@link ModifyAction} to implement {@link Visitor}
 	 */
 	private class CustomModifyAction
-		extends ModifyAction<MacroKey>implements URGuiUpdater {
+		extends ModifyAction<MacroKey> implements URGuiUpdater {
 
 		public CustomModifyAction(String name, List<Set<MacroKey>> sets,
 				int maxElapsedTime)
@@ -908,23 +883,22 @@ public class MacroScreenEditor {
 	
 	
 	/**
-	 * Interfaccia che unita ad Action consente di poter aggiornare l'UI in
-	 * caso l'utente esegua l'undo o il redo di un'azione.
+	 * Interface that joined with Action permits of update the UI in the case of
+	 * undo and redo actions done by the user
 	 * <p>
-	 * Deve essere obbligatoriamente implementata da tutte le {@link Action}
-	 * utilizzate.
+	 * Must be implmented by all {@link Action} used
 	 * </p>
 	 */
 	private static interface URGuiUpdater {
 		
 		/**
-		 * Chiamato quando l'utente esegue l'undo sull'azione
+		 * Called when user executes the undo action
 		 */
 		public void onUndo();
 		
 		
 		/**
-		 * Chiamato quando l'utente ri-applica l'azione
+		 * Called when user executes the redo action
 		 */
 		public void onRedo();
 	}

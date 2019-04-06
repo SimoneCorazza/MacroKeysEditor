@@ -45,26 +45,28 @@ import com.macrokeyseditor.util.ColorUtil;
  */
 public class MKRenderingComponent extends JComponent {
 	
-	/** Paint per il paattern a scacchiera di background; mai null */
+	/** Paint for the checkboard pattern for the background; never null */
 	private static final TexturePaint checkboardPattern;
 	
-	/** Per lo spostamento dei tasti */
+	/** For the move of keys */
 	private final MacroKeyDragger keyDragger = new MacroKeyDragger();
 	
-	/** MacroScreen attualmente mostrata; null se nessuna � selezionata */
+	/** MacroScreen showed; null if none */
 	private final MacroScreenEditor screenEdit;
-	/** Proprietà del monitor utilizzato */
+	
+	/** Screen used */
 	private final Screen screen;
-	/** Manager delle maschere */
+	
+	/** Mask manager */
 	private final MasksManager maskManager;
 	
-	/** Istanza per il rendering della MacroScreen */
+	/** MacroScreen renderer */
 	private Painter painter;
 	
 	
 	
 	static {
-		// Creo il pattern a scacchiera
+		// Checkboard pattern paint
 		BufferedImage bi = new BufferedImage(20, 20,
 	        BufferedImage.TYPE_INT_RGB);
 	    Graphics2D g = bi.createGraphics();
@@ -80,12 +82,11 @@ public class MKRenderingComponent extends JComponent {
 	
 	
 	/**
-	 * @param screenEdit Editor della {@link MacroScreen} gestita da questo componente
-	 * @param maskManager Manager delle maschere
-	 * @throws ScreenException Se è impossibile ottenere le informazioni necessarie dal 
-	 * @throws NullPointerException Se un parametro è null
+	 * @param screenEdit Editor for the {@link MacroScreen} managed by this component
+	 * @param maskManager Mask manager
+	 * @throws ScreenException If is impossible to obtain the info needed form the screen
 	 */
-	public MKRenderingComponent(MacroScreenEditor screenEdit, MasksManager maskManager)
+	public MKRenderingComponent(@NonNull MacroScreenEditor screenEdit, @NonNull MasksManager maskManager)
 			throws ScreenException {
 		Objects.requireNonNull(screenEdit);
 		Objects.requireNonNull(maskManager);
@@ -136,7 +137,7 @@ public class MKRenderingComponent extends JComponent {
 			
 			@Override
 			public void maskRemove(Mask m) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
@@ -148,7 +149,7 @@ public class MKRenderingComponent extends JComponent {
 			
 			@Override
 			public void maskAdded(Mask m) {
-				// Niente
+				// Nothing
 			}
 
 			@Override
@@ -209,7 +210,7 @@ public class MKRenderingComponent extends JComponent {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//Non sempre questo evento � eseguito
+				// This callback not always is executed
 			}
 				
 		});
@@ -231,7 +232,7 @@ public class MKRenderingComponent extends JComponent {
 		
 		
 		if(s != null) {
-			// Per il rendering della maschera
+			// Rendering for the mask
 			Mask mask = maskManager.getSelected();
 			RectF background;
 			if(mask == null) {
@@ -240,7 +241,7 @@ public class MKRenderingComponent extends JComponent {
 				Size maskSize = mask.getScreenSize(screen);
 				if(s.getOrientation() == Orientation.Horizontal) {
 					background = new RectF(0, 0, maskSize.width, maskSize.height);
-				} else { // Anche nel caso Rotate uso il verticale
+				} else { // Using the vertical orietation also in the Rotate case
 					background = new RectF(0, 0, maskSize.height, maskSize.width);
 				}
 			}
@@ -261,9 +262,8 @@ public class MKRenderingComponent extends JComponent {
 	}
 
 	/**
-	 * Permette di interrompere le operazioni di input (es. spostamento di un tasto)
-	 * @param refresh False -> il controllo non aggiorna la grafica automaticamente per questa operazione,
-	 * potrebbe essere necessario che l'utente la esegua
+	 * Permits to interrupt the input operations (eg. moving a key)
+	 * @param refresh False the UI is not updated for this operation. Manual updated may be necessary
 	 */
 	public void stopOperation(boolean refresh) {
 		keyDragger.cancel(refresh);
@@ -271,7 +271,7 @@ public class MKRenderingComponent extends JComponent {
 	
 	
 	/**
-	 * @return Editor della schermata renderizzata
+	 * @return Editor of the rendering screen
 	 */
 	public MacroScreenEditor getMacroScreenEditor() {
 		return screenEdit;
@@ -279,7 +279,7 @@ public class MKRenderingComponent extends JComponent {
 	
 	
 	
-	/** Implementazione di rendering per swing */
+	/** Rendering implementation for swing */
 	private static final class Painter implements Renderer {
 		
 		private PaintStyle p;
@@ -294,8 +294,8 @@ public class MKRenderingComponent extends JComponent {
 		}
 		
 		/**
-		 * Resetta lo stato di rendering. Utile quando si deve renderizzare un'altro frame
-		 * @param g Oggetto grafico nuovo
+		 * Reset the rendering state. Useful when another frame needs to be rendered
+		 * @param g Graphics to reset
 		 */
 		public void reset(@NonNull Graphics2D g) {
 			this.g = g;
@@ -393,7 +393,7 @@ public class MKRenderingComponent extends JComponent {
 	}
 	
 	
-	/** Classe utilizzata per la gestione dello spostamento dei {@link MacroKey} */
+	/** Class to manage the movement of keys {@link MacroKey} */
 	private class MacroKeyDragger {
 		
 		private final List<Pair> draggedKeys = new ArrayList<>();
@@ -401,7 +401,7 @@ public class MKRenderingComponent extends JComponent {
 		private boolean drag = false;
 		private boolean mouseDown = false;
 		
-		/** Evento associato alla pressione di un tasto del mouse */
+		/** Event associated at the pressure of a key */
 		public void onMousePressed(MouseEvent e) {
 			mouseDown = e.getButton() == MouseEvent.BUTTON1;
 			if(mouseDown) {
@@ -420,25 +420,25 @@ public class MKRenderingComponent extends JComponent {
 			}
 		}
 		
-		/** Evento associato al rilascio di un tasto del mouse */
+		/** Event associated at the release of a key of the mouse */
 		public void onMouseRelease(MouseEvent e) {
 			mouseDown = e.getButton() != MouseEvent.BUTTON1;
 			if(drag && !mouseDown) {
 				drag = false;
 				
-				// Resetto la posizione dei tasti e creo la lista delle
-				// modifiche alle aree da effettuare
+				// Reset the position of the keys and create the list of the changes to do the ares
 				List<ModifyAction.Set<MacroKey>> sets = new ArrayList<>();
 				for(Pair p : draggedKeys) {
-					// Resetto la posizione del tasto
+					// Reset the position of the key
 					p.m.setArea(p.initialArea);
-					// Calcolo la posizione finale del tasto
+					
+					// Calsulate the ending position of the key
 					RectF newArea = moveRect(p.initialArea,
 							screen,
 							e.getX() - startX,
 							e.getY() - startY);
 					
-					// Aggiungo il set da compiere
+					// Adds the set to accoplish
 					ModifyAction.Set<MacroKey> s =
 							new ModifyAction.Set<MacroKey>(p.m, newArea);
 					sets.add(s);
@@ -449,7 +449,7 @@ public class MKRenderingComponent extends JComponent {
 			}
 		}
 		
-		/** Evento associato al movimento del mouse con la pressione di un tasto */
+		/** Event associated with the movement of the mouse while a key is pressed */
 		public void onMouseDragged(MouseEvent e) {
 			List<MacroKey> sel = screenEdit.getMacroKeySelected();
 			drag = mouseDown && !sel.isEmpty();
@@ -467,8 +467,8 @@ public class MKRenderingComponent extends JComponent {
 		}
 		
 		/** 
-		 * Permette di annullare l'operazione di drag 
-		 * @param False non esegue l'aggiornamento della grafica del componente anche se necessario
+		 * Cancel a drag operation of a key
+		 * @param False does not update the UI
 		 */
 		public void cancel(boolean refresh) {
 			if(drag) {
@@ -492,17 +492,18 @@ public class MKRenderingComponent extends JComponent {
 	}
 	
 	/**
-	 * Trasla un rettangolo in millimetri di una quantit� delta fornita in pixel
-	 * @param r Rettangolo da traslare
-	 * @param s Schermo di riferimento
-	 * @param deltaPxX Traslazione in pixel sull'asse X
-	 * @param deltaPxY Traslazione in pixel sull'asse Y
-	 * @return Rettangolo {@code r} traslato in millimetri
+	 * Translate a rectangle measured in millimiters of a given pixel quantity
+	 * @param r Rectangle to translate
+	 * @param s Screen to operate
+	 * @param deltaPxX Delta in pixels in the X axis
+	 * @param deltaPxY Delta in pixels in the Y axis
+	 * @return Rectangle {@code r} translated of the given quantity
 	 */
 	private static RectF moveRect(@NonNull RectF r, @NonNull Screen s, float deltaPxX, float deltaPxY) {
 		float dx = ScreenUtility.pxtomm_X(deltaPxX, s);
 		float dy = ScreenUtility.pxtomm_Y(deltaPxY, s);
-		//Converto in Int per evitare problemi di imprecisione nel rendering
+		
+		// Convertion in int to prevent imprecisions in the calculations
 		return new RectF((int)(r.left + dx), (int)(r.top + dy), (int)(r.right + dx), (int)(r.bottom + dy));
 	}
 }

@@ -37,11 +37,11 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Componente per la visualizzazione e modifica delle proprietà */
+/** Component for showing and editing the properties of a {@link MacroKey} */
 public final class MKPropetyComponent extends JPanel {
 	
-	/** Flag per segnalare che si sta eseguendo il settaggio della macro;
-	 *  per indicare l'inutilità di eseguire gli eventi
+	/** 
+	 * Flag to indicate that the macro is being set; to indicate the futility of running events
 	 */
 	private boolean setting = false;
 	
@@ -59,7 +59,7 @@ public final class MKPropetyComponent extends JPanel {
 	private final JButton btnKeys;
 	
 	
-	/** Tasti attualmente selezionati; null se nessuno */
+	/** Currently selected keys; null if none */
 	private final List<MacroKey> macroKeys = new ArrayList<>();
 	
 	private final MacroSetupEditor setupEditor;
@@ -74,21 +74,21 @@ public final class MKPropetyComponent extends JPanel {
 		
 		@Override
 		public void macroScreenEdited(@NonNull MacroScreen m) {
-			// Niente
+			// Nothing
 		}
 		
 		@Override
 		public void macroKeyRemoved(@NonNull MacroScreen ms,
 				@NonNull List<MacroKey> mk) {
-			// Niente
+			// Nothing
 		}
 		
 		@Override
 		public void macroKeyEdited(@NonNull MacroScreen ms,
 				@NonNull List<MacroKey> mk, @NonNull String property) {
 			if(atLeastOneInCommon(mk, macroKeys)) {
-				// Copio la lista della selezione attuale, se si usasse direttamente
-				// macroKeys possono esserci problemi di concorrenza (macroKeys viene modificata)
+				// Copy the current selection list, if you directly use macroKeys there
+				// can be concurrency problems (macroKeys is modified)
 				List<MacroKey> copy = new ArrayList<>(macroKeys);
 				// Aggiorno l'UI
 				updateMacroKey(copy);
@@ -98,25 +98,24 @@ public final class MKPropetyComponent extends JPanel {
 		@Override
 		public void macroKeyAdded(@NonNull MacroScreen ms,
 				@NonNull List<MacroKey> mk) {
-			// Niente
+			// Nothing
 		}
 
 		@Override
 		public void swapMacroKeys(@NonNull MacroKey a, @NonNull MacroKey b) {
-			// Niente
+			// Nothing
 		}
 	};
 
 	
 	/**
-	 * Indica se le due liste hanno almeno un'elemento in comune.
-	 * <p>Se le liste sono vuote ritorna false</p>
-	 * @param l Prima lista
-	 * @param ll Seconda lista
-	 * @return True se c'è almeno un elemento in comune, False altrimenti
-	 */
-	private static boolean atLeastOneInCommon(List<MacroKey> l,
-			List<MacroKey> ll) {
+	* Indicates whether the two lists have at least one element in common.
+	* @param l First list
+	* @param The second list
+	* @return True if there is at least one element in common, False otherwise
+	*/
+	private static boolean atLeastOneInCommon(@NonNull List<MacroKey> l,
+			@NonNull List<MacroKey> ll) {
 		assert l != null && ll != null;
 		
 		for(MacroKey m : ll) {
@@ -132,7 +131,7 @@ public final class MKPropetyComponent extends JPanel {
 	
 	
 	/**
-	 * @param setupEditor Editor per la {@link MacroSetup}
+	 * @param setupEditor Editor for the {@link MacroSetup}
 	 */
 	public MKPropetyComponent(@NonNull MacroSetupEditor setupEditor) {
 		setLayout(null);
@@ -162,13 +161,16 @@ public final class MKPropetyComponent extends JPanel {
 			}
 		});
 		
-		// Gestisce gli eventi dei componenti con evento {@link ActionListener}
+		// Handles the component's events with event {@link ActionListener}
 		final MyActionListener actListener = new MyActionListener();
-		// Gestisce gli eventi dei componenti con evento {@link DocumentListener}
+		
+		// Handles the component's events with event {@link DocumentListener}
 		final MyDocumentListener docListener = new MyDocumentListener();
-		// Gestisce gli eventi dei componenti con evento {@link ChangeListener}
+		
+		// Handles the component's events with event {@link ChangeListener}
 		final MyChangeListener changeListener = new MyChangeListener();
-		// Gestisce gli eventi generati dai componenti combobox
+		
+		// Handles the component's events with event
 		final MyItemListener itemListener = new MyItemListener();
 		
 		JLabel lblNewLabel = new JLabel("Area");
@@ -266,7 +268,7 @@ public final class MKPropetyComponent extends JPanel {
 		lblType.setBounds(10, 400, 46, 14);
 		add(lblType);
 		
-		//Inizialmente non visualizzo nessuna macro -> nascondo il controllo
+		// Initially the macro is not shown -> control hidden
 		setVisible(false);
 	}
 	
@@ -274,19 +276,19 @@ public final class MKPropetyComponent extends JPanel {
 	
 	
 	/**
-	 * Aggiorna i valori dei {@link MacroKey} attualemte elaborati
-	 * @param l Lista di cui mostrare le proprietà; null se nessuno
-	 */
+	* Update the values of the actual processed {@link MacroKey} 
+	* @param l List whose properties to show; null if none
+	*/
 	private void updateMacroKey(List<MacroKey> l) {
 		boolean b = l != null && !l.isEmpty();
 		if(b) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					// Ignoro gli eventi di modifica
+					// Ignore edit events
 		            setting = true;
 		            
-		            // Considero le proprietà del primo elemento
+		            // Only the first's properties matter
 		            MacroKey m = l.get(0);
 		            
 		            rctArea.setRect(m.getArea());
@@ -303,7 +305,7 @@ public final class MKPropetyComponent extends JPanel {
 		            
 		            btnKeys.setText(m.getKeySeq().toString());
 		            
-		            // Ignoro gli eventi di modifica
+		            // Ignore edit events
 		            setting = false;
 				}
 			});
@@ -311,7 +313,7 @@ public final class MKPropetyComponent extends JPanel {
 			
         }
         
-		// Aggiorno il campo dei tasti attualmente selezionati
+		// Update the field of the keys actually selected
         this.macroKeys.clear();
         if(l != null) {
         	this.macroKeys.addAll(l);
@@ -321,10 +323,10 @@ public final class MKPropetyComponent extends JPanel {
 	}
 	
 	/**
-	 * Modifica la proprietà indicata
-	 * @param property Nome della properitaà; vedi {@link MacroScreenEditor}
-	 * @param val Nuovo valore della propietà
-	 */
+	* Change the indicated property
+	* @param property Name of the property; see {@link MacroScreenEditor}
+	* @param val New value of the property
+	*/
 	private void editProperty(@NonNull String property, Object val) {
 		MacroScreenEditor e = setupEditor.getMacroScreenEditorSelected();
 		assert e != null : "Must not be called when no screen selected";
@@ -338,7 +340,7 @@ public final class MKPropetyComponent extends JPanel {
 	
 	
 	//------------------------------
-	//Classi per le varie tipologie di listener per controlli di questo componente
+	// Classes for the various types of listeners for the controls of this component
 	//------------------------------
 	
 	private class MyActionListener implements ActionListener {
@@ -425,7 +427,7 @@ public final class MKPropetyComponent extends JPanel {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			//Non considero l'evento di deselezione
+			// I do not consider the deselection event
 			if(!setting && !macroKeys.isEmpty() && e.getStateChange() == ItemEvent.SELECTED) {
 				Object s = e.getSource();
 				Object it = e.getItem();

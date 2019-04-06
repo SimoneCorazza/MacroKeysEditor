@@ -1,8 +1,11 @@
 package com.macrokeyseditor.util;
 
+import java.util.Objects;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
- * Memorizza le dimensioni bidimensionali di un oggetto
+ * Class for mesure a size
  */
 public class Size {
 	
@@ -21,10 +24,12 @@ public class Size {
 	
 	
 	/**
-	 * Costruttore di copia
-	 * @param s Size da copiare
+	 * Copy contructor
+	 * @param s Size to copy
 	 */
-	public Size(Size s) {
+	public Size(@NonNull Size s) {
+		Objects.requireNonNull(s);
+		
 		this.width = s.width;
 		this.height = s.height;
 	}

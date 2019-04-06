@@ -15,17 +15,18 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.macrokeys.rendering.RectF;
 
-/** Pannello per raccogliere i dati di un rettangolo */
+/** Panel to collect the data of a rectangle */
 public class RectangleComponent extends JPanel {
 	
-	/** Rettangolo attuale */
+	/** Actual rectangle */
 	private RectF rec = null;
 	
 	private final ChangeLis list = new ChangeLis();
 	
-	/** Flag per segnalare che si sta eseguendo il settaggio dei valori per gli spinner;
-	 *  per indicare l'inutilit� di eseguire gli eventi
-	 */
+	/** 
+	 * Flag to indicate that the spinner values are being set;
+	 * to indicate the futility of running events
+	*/
 	private boolean setting = false;
 	
 	private JSpinner spnX;
@@ -33,7 +34,7 @@ public class RectangleComponent extends JPanel {
 	private JSpinner spnWidth;
 	private JSpinner spnHeight;
 	
-	/** Listeners per il cambiamento della propriet� */
+	/** Listeners for the change of the property */
 	private final List<ChangeListener> changeListeners = new ArrayList<>();
 
 	public RectangleComponent() {
@@ -84,9 +85,9 @@ public class RectangleComponent extends JPanel {
 	}
 	
 	/**
-	 * Setta il rettangolo indicato; va a copiare il parametro
-	 * @param r Rettangolo da settare; se null verr� inizializzato ai valori di costruttore
-	 */
+	* Set the indicated rectangle; it clone the parameter
+	* @param r Rectangle to be set; if null it will be initialized to the constructor values
+	*/
 	public void setRect(RectF r) {
 		if(r == null) {
 			rec = new RectF();
@@ -106,14 +107,14 @@ public class RectangleComponent extends JPanel {
 	}
 	
 	/**
-	 * @return Rettnagolo impostato, copia dell'originale
+	 * @return Rectangle set, not editable
 	 */
 	public @NonNull RectF getRect() {
 		return new RectF(rec);
 	}
 	
 	/**
-	 * Genera l'evento dei cambiamento del rettangolo
+	 * Fires the event for a rectangle change
 	 */
 	private void generateChangeList() {
 		ChangeEvent e = new ChangeEvent(this);
@@ -123,19 +124,20 @@ public class RectangleComponent extends JPanel {
 	}
 	
 	/**
-	 * @param l Listener da aggiungere
+	 * @param l Listener to add
 	 */
 	public void addChangeListener(@NonNull ChangeListener l) {
 		changeListeners.add(l);
 	}
 	
 	
-	/** Classe per il listener di cambiamento delle varie componenti del rettangolo */
+	/** Class for the listener of change of the various components of the rectangle */
 	private class ChangeLis implements ChangeListener {
 
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			if(!setting) { //Evito di effettuare l'aggiornamento se si sta eseguendo semplicemnte il settaggio			
+			// I avoid updating if you are simply performing the setting
+			if(!setting) {		
 				float x = (int)spnX.getValue();
 				float y = (int)spnY.getValue();
 				float w = (int)spnWidth.getValue();

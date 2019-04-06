@@ -24,15 +24,15 @@ public class MacroScreenTabPane {
 	
 	private final MacroSetupEditor macSetEditor;
 	
-	/** Listener per le modifiche apportate ad una {@link MacroScreen} */
+	/** Listener for the changes done to a {@link MacroScreen} */
 	private final MacroScreenEditorListener macroScreenListener =
 			new MacroScrenEdList();
 			
 	
 	/**
-	 * @param tabPane Pannello di cui eseguire il wrapper
-	 * @param setupEditor Editor per la {@link MacroSetup}
-	 * @param masksManager manager delle maschere
+	 * @param tabPane Pane to wrap
+	 * @param setupEditor Editor for the {@link MacroSetup}
+	 * @param masksManager Mask manager
 	 */
 	public MacroScreenTabPane(@NonNull JTabbedPane tabPane,
 			@NonNull MacroSetupEditor setupEditor,
@@ -51,7 +51,7 @@ public class MacroScreenTabPane {
 					try {
 						rmk = new MKRenderingComponent(s, masksManager);
 					} catch (ScreenException e) {
-						// TODO: gestire eccezione
+						// TODO: handle exception
 						e.printStackTrace();
 						return;
 					}
@@ -60,10 +60,9 @@ public class MacroScreenTabPane {
 					tabPane.add(title, rmk);
 					s.addEditEventListener(macroScreenListener);
 				} else {
-					// Rimuovo l'evento
 					s.removeEditEventListener(macroScreenListener);
 					
-					// Rimuovo dalla TabPane e dalla map la MacroScreen
+					// Remove from the TabPane and from the map the MacroScreen
 					int index = find(s);
 					assert index != -1;
 					tabPane.remove(index);
@@ -77,7 +76,8 @@ public class MacroScreenTabPane {
 					tabPane.setVisible(false);
 				} else {
 					tabPane.setVisible(true);
-					// Cambio la selezione del pannello
+					
+					// Change the selection of the panel
 					int index = find(actual);
 					assert index != -1;
 					tabPane.setSelectedIndex(index);
@@ -90,7 +90,7 @@ public class MacroScreenTabPane {
 		tabPane.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				// Cambio la selezione
+				// Change the selection
 				int index = tabPane.getSelectedIndex();
 				if(index == -1) {
 					setupEditor.selectMacroScreen(null);
@@ -109,7 +109,7 @@ public class MacroScreenTabPane {
 	
 	
 	/**
-	 * @return Pannello di cui si esegue il wrapper
+	 * @return Wrapped panel
 	 */
 	public JTabbedPane getJTabbedPane() {
 		return tabPane;
@@ -117,10 +117,9 @@ public class MacroScreenTabPane {
 	
 	
 	/**
-	 * Trova l'indice della tab il cui componente tratta la
-	 * {@link MacroScreenEditor} indicata 
-	 * @param m Macro da trovare
-	 * @return Indice della tab; -1 se non trovata
+	 * Find the index of the tab whose component treats the given {@link MacroScreenEditor}
+	 * @param m Macro to find
+	 * @return Tab index; -1 if not found
 	 */
 	private int find(MacroScreenEditor m) {
 		for(int i = 0; i < tabPane.getTabCount(); i++) {
@@ -137,10 +136,9 @@ public class MacroScreenTabPane {
 	
 	
 	/**
-	 * Trova l'indice della tab il cui componente tratta la
-	 * {@link MacroScreen} indicata 
-	 * @param m Macro da trovare
-	 * @return Indice della tab; -1 se non trovata
+	 * Find the index of the tab whose component treats the given {@link MacroScreen}
+	 * @param m Macro to find
+	 * @return Tab index; -1 if not found
 	 */
 	private int find(MacroScreen m) {
 		for(int i = 0; i < tabPane.getTabCount(); i++) {
@@ -163,8 +161,8 @@ public class MacroScreenTabPane {
 	
 	
 	/**
-	 * @param t Swipe da trasformare in stringa
-	 * @return Stringa esplicativa dello swipe
+	 * @param t Swipe type to stringify
+	 * @return String rapresenting the swipe type
 	 */
 	private static @NonNull String swipeTypeToString(MacroScreen.SwipeType t) {
 		switch(t) {
@@ -186,21 +184,21 @@ public class MacroScreenTabPane {
 	
 	
 	// ------------------
-	// Classi per callback
+	// Callback classes
 	// -----------------
 	
 	
-	/** Implementazione del listener per questa classe */
+	/** Listener implementation for this class */
 	private class MacroScrenEdList implements MacroScreenEditorListener {
 		
 		@Override
 		public void selectionChange(List<MacroKey> actual) {
-			// Niente
+			// Nothing
 		}
 		
 		@Override
 		public void macroScreenEdited(@NonNull MacroScreen m) {
-			// Aggiorno il titolo della tab
+			// Update the title of the tab
 			int index = find(m);
 			String title = swipeTypeToString(m.getSwipeType());
 			tabPane.setTitleAt(index, title);
@@ -209,24 +207,24 @@ public class MacroScreenTabPane {
 		@Override
 		public void macroKeyRemoved(@NonNull MacroScreen ms,
 				@NonNull List<MacroKey> mk) {
-			// Niente
+			// Nothing
 		}
 		
 		@Override
 		public void macroKeyEdited(@NonNull MacroScreen ms,
 				@NonNull List<MacroKey> mk, @NonNull String property) {
-			// Niente
+			// Nothing
 		}
 		
 		@Override
 		public void macroKeyAdded(@NonNull MacroScreen ms,
 				@NonNull List<MacroKey> mk) {
-			// Niente
+			// Nothing
 		}
 
 		@Override
 		public void swapMacroKeys(@NonNull MacroKey a, @NonNull MacroKey b) {
-			// Niente	
+			// Nothing	
 		}
 		
 	};

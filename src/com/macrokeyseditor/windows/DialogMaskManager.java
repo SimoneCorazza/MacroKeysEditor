@@ -22,7 +22,7 @@ import java.awt.Window;
 import java.awt.Dimension;
 
 /**
- * Dialog per gestire le {@link Mask}
+ * Dialog for managing the {@link Mask}
  */
 public class DialogMaskManager extends JDialog {
 	
@@ -41,8 +41,8 @@ public class DialogMaskManager extends JDialog {
 	
 	
 	/**
-	 * @param manager manger delle {@link Mask}
-	 * @param parent Finestra padre
+	 * @param manager Manager of {@link Mask}
+	 * @param parent Parent window
 	 */
 	public DialogMaskManager(MasksManager manager, Window parent) {
 		super(parent, ModalityType.DOCUMENT_MODAL);
@@ -51,43 +51,43 @@ public class DialogMaskManager extends JDialog {
 		
 		manager.addListener(list);
 		
-		// Listener per la chiusura della finestra
+		// Listener for the closure of this window
 		this.addWindowListener(new WindowListener() {
 			
 			@Override
 			public void windowOpened(WindowEvent e) {
-				// Nienete
+				// Nothing
 			}
 			
 			@Override
 			public void windowIconified(WindowEvent e) {
-				// Nienete
+				// Nothing
 			}
 			
 			@Override
 			public void windowDeiconified(WindowEvent e) {
-				// Niente
+				// Nothing
 			}
 			
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				// Nienete
+				// Nothing
 			}
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// Nienete
+				// Nothing
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// Rimuovo il listener 
+				// Remove the listener
 				manager.removeListener(list);
 			}
 			
 			@Override
 			public void windowActivated(WindowEvent e) {
-				// Nienete
+				// Nothing
 			}
 		});
 		
@@ -154,14 +154,15 @@ public class DialogMaskManager extends JDialog {
 		});
 		btnRemove.setSize(71, 23);
 		pnlRight.add(btnRemove);
-		// Dimensioni del pannello width in base alla dimensioni dei bottoni
+		
+		// The width of the panel varies in base of the size of the buttons
 		pnlRight.setPreferredSize(new Dimension(btnRemove.getWidth(), 100));
 	}
 	
 	
 	/**
-	 * Inserisce in {@link #lstMask} tutte e sole le {@link Mask}
-	 * contenute in {@link MasksManager}
+	 * Insert in {@link #lstMask} all and only the {@link Mask}
+	 * contained in {@link MasksManager}
 	 */
 	private void insertInList() {
 		masksModel.removeAllElements();
@@ -193,7 +194,7 @@ public class DialogMaskManager extends JDialog {
 
 		@Override
 		public void maskSelectedChanged(Mask m) {
-			// Ninente
+			// Nothing
 		}
 	};
 }

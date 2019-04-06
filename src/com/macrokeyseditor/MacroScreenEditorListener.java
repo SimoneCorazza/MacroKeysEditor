@@ -10,57 +10,53 @@ import com.macrokeys.MacroKey;
 import com.macrokeys.MacroScreen;
 
 /**
- * Interfaccia per il listener di modifiche da parte di
- * {@link MacroScreenEditor}
+ * Listener for the changes done by {@link MacroScreenEditor}
  */
 public interface MacroScreenEditorListener extends EventListener {
 	
 	/**
-	 * Chiamato quando dei {@link MacroKey} vengono rimossi dalla relativa
-	 * {@link MacroScreen}
-	 * @param ms MacroScreen di appartenenza dei tasti rimossi
-	 * @param l Lista di tasti rimossi
-	 */
+	* Called when {@link MacroKey} is removed from the related {@link MacroScreen}
+	* @param ms {@link MacroScreen} belonging to the removed keys
+	* @param l List of removed keys
+	*/
 	public void macroKeyRemoved(@NonNull MacroScreen ms,
 			@NonNull List<MacroKey> l);
 	
 	
 	/**
-	 * Chiamato quando dei {@link MacroKey} viengono aggiunti nella
-	 * {@link MacroScreen}
-	 * @param ms MacroScreen di appartenenza dei tasti aggiunti
-	 * @param l Tasti aggiunti
+	 * Called when one {@link MacroKey} are added to the {@link MacroScreen}
+	 * @param ms {@link MacroScreen} belonging to the removed keys
+	 * @param l Added keys
 	 */
 	public void macroKeyAdded(@NonNull MacroScreen ms,
 			@NonNull List<MacroKey> l);
 	
 	/**
-	 * Chiamato quando dei {@link MacroKey} vengono modificati nella relativa
-	 * {@link MacroScreen}
-	 * @param ms MacroScreen di appartenenza dei tasti modificati
-	 * @param l Tasti modificati
-	 * @param property Nome della proprietà; vedi {@link MacroScreenEditor}
+	 * Called when the {@link MacroKey} are edited in the related {@link MacroScreen}
+	 * @param ms {@link MacroScreen} belonging to the edited keys
+	 * @param l Edited keys
+	 * @param property Name of the edited field; see {@link MacroScreenEditor}
 	 */
 	public void macroKeyEdited(@NonNull MacroScreen ms,
 			@NonNull List<MacroKey> l, @NonNull String property);
 	
 	/**
-	 * Chiamato quando una proprietà della {@link MacroScreen} viene modificata
-	 * @param m MacroScreen modificata
+	 * Called when one of the field of the {@link MacroScreen} is edited
+	 * @param m {@link MacroScreen} edited
 	 */
 	public void macroScreenEdited(@NonNull MacroScreen m);
 	
 	
 	/**
-	 * Callback per un cambiamento della selezione
-	 * @param actual Attuale elenco di tasti selezionati
+	 * Called when the selection of the keys changes
+	 * @param actual Set of newly selected keys
 	 */
 	void selectionChange(List<MacroKey> actual);
 	
 	/**
-	 * Chiamato quando due tasti vengono cambiati di posizione nella lista
-	 * @param a Primo tasto cambiato di posizione
-	 * @param b Secondo tasto cambiato di posizione
+	 * Called when two keys are swapped in the list
+	 * @param a Key swapped
+	 * @param b Other key swapped
 	 */
 	void swapMacroKeys(@NonNull MacroKey a, @NonNull MacroKey b);
 }

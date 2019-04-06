@@ -3,7 +3,6 @@ package com.macrokeyseditor.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -13,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -23,31 +21,32 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.macrokeyseditor.util.ColorUtil;
 
-/** Componente per la selezione del colore */
+/** Component for the selection of a color */
 public final class ColorComponent extends JComponent {
 
 	private static final Color COLOR_PRESSED = Color.DARK_GRAY;
 	private static final Color COLOR_OVER = Color.GRAY;
 	
 	
-	/** Stringa che identifica l'azione del cambiamento del colore */
+	/** String that identifies the action of the color change */
 	public static String ACTION_COLOR_CHANG = "color";
 	
 	
 	private static int SAMPLE_COLOR_MAX_X = 30;
 	private static int SAMPLE_COLOR_MAX_Y = 30;
 	
-	/** Per la stringa rappresentativa del colore */
+	/** For the string rapresenting the color */
 	JLabel lblName;
 	
-	/** Colore utilizzato */
+	/** Used color */
 	private java.awt.Color color;
 	
 	private final List<ActionListener> listners = new ArrayList<>();
 	
-	/** Indica se il mouse � sopra il controllo */
+	/** Flag to indicate that the cursor is over this */
 	private boolean mouseOver = false;
-	/** Indica se il mouse sta cliccando il controllo */
+	
+	/** Flag to indicate that the cursor is clicking this */
 	private boolean mouseDown = false;
 	
 	
@@ -119,16 +118,16 @@ public final class ColorComponent extends JComponent {
 	
 	
 	/**
-	 * Aggiunge un listener
-	 * @param l Azione da aggiungere
+	 * Add a listener
+	 * @param l Action to add
 	 */
 	public void addActionListener(@NonNull ActionListener l) {
 		listners.add(l);
 	}
 	
 	/**
-	 * Genera l'evento con l'azione data
-	 * @param e Evento
+	 * Generate the event for the given event
+	 * @param e Event
 	 */
 	private void generateEvents(@NonNull ActionEvent e) {
 		for(ActionListener l : listners) {
@@ -159,14 +158,14 @@ public final class ColorComponent extends JComponent {
 	
 	
 	/**
-	 * @return Colore attualmente impostato
+	 * @return Color actually set
 	 */
 	public int getColor() {
 		return ColorUtil.ColortoARGB(color);
 	}
 
 	/**
-	 * @param argb Colore da impostare in formato argb; non genera l'evento del colore cambiato
+	 * @param argb Color to set in the format argb; this call does not generate the event of color changed
 	 */
 	public void setColor(int argb) {
 		this.color = ColorUtil.ARGBtoColor(argb);
@@ -174,8 +173,8 @@ public final class ColorComponent extends JComponent {
 	}
 	
 	/**
-	 * @param c Colore da trasformare in stringa
-	 * @return Stringa rappresentante il colore
+	 * @param c Color to transform in string
+	 * @return String rapresenting the color
 	 */
 	private static @NonNull String colorToString(@NonNull Color c) {
 		return c.getAlpha() + ", " + c.getRed() + ", " + c.getGreen() + ", " + c.getBlue();

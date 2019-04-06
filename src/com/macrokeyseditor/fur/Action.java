@@ -2,22 +2,24 @@ package com.macrokeyseditor.fur;
 
 import java.util.Date;
 
-/** Generica azione annullabile */
+import org.eclipse.jdt.annotation.NonNull;
+
+/** Generic cancellable action */
 public abstract class Action {
 	
 	/**
-	 * Data di inserimento dell'azione
+	 * Date of the insertion of this action
 	 */
 	Date date;
 	
 	/**
-	 * Ultimo istante in cui è stato eseguito lo scorso merge; null se mai
+	 * Last merge date; null if none
 	 */
 	Date dateLastMerge;
 	
 	/**
-	 * Valido solo dopo l'inserimento in {@link ActionManager}
-	 * @return Data di inserimento dell'azione
+	 * Valid only after the insertion in {@link ActionManager}
+	 * @return Date of the insertion of this action
 	 * @see ActionManager#addAction(Action)
 	 * @see ActionManager#addAction(Action, boolean)
 	 */
@@ -28,9 +30,8 @@ public abstract class Action {
 	
 	
 	/**
-	 * Valido solo dopo l'inserimento in {@link ActionManager}
-	 * @return Data dell'ultomo merge eseguito da this dell'azione; null se
-	 * nessun merge è stato ancora eseguito
+	 * Valid only after the insertion in {@link ActionManager}
+	 * @return Last merge date; null if no merge executed yet
 	 * @see ActionManager#addAction(Action)
 	 * @see ActionManager#addAction(Action, boolean)
 	 */
@@ -40,8 +41,8 @@ public abstract class Action {
 	
 	
 	/**
-	 * Calcola il tempo trascorso dalla data di inserimento
-	 * @return Differenza di tempo in millisecondi dalla di aggiunta
+	 * Calculate the time passed from the insertion date of this action
+	 * @return Difference in milliseconds from the insertion date until now
 	 * @see #getDate()
 	 */
 	protected long elapsedTimeAdd() {
@@ -50,8 +51,8 @@ public abstract class Action {
 	
 	
 	/**
-	 * Calcola il tempo trascorso dall'utlimo inserimento
-	 * @return Tempo trascorso in millisecondi; -1 se mai
+	 * Calculate the time passed since the last merge
+	 * @return Elapsed time in milliseconds; -1 if no merge was executed
 	 */
 	protected long elapsedTimeLastMerge() {
 		if(dateLastMerge == null) {
@@ -63,27 +64,25 @@ public abstract class Action {
 	
 	
 	/** 
-	 * Annulla l'azione
+	 * Undo this action
 	 */
 	public abstract void undoExecute();
 	
 	
 	/**
-	 * Applica l'azione
+	 * Applay the action
 	 */
 	public abstract void execute();
 	
 	
 	/**
-	 * Cerca di unire this con l'azione indicata.
+	 * Try to merge this action with the given action.
 	 * <p>
-	 * <li> L'implementazione può decidere un limite massimo alla quantità di
-	 * azioni che è possibile unire
-	 * <li> L'implementazione può decidere di non eseguire mai l'unione
+	 * <li> The implementation can decide to limit the amount of mergable action of the same time
+	 * <li> The implementation may not support the merge
 	 * <p>
-	 * @param followingAction Azione seguente; non null
-	 * @return True merge ha avuto successo, false altrimenti
-	 * @throws NullPointerException Se {@code followingAction} è null
+	 * @param followingAction Action to merge
+	 * @return True if the merge was executed, false otherwise
 	 */
-	public abstract boolean tryToMerge(Action followingAction);
+	public abstract boolean tryToMerge(@NonNull Action followingAction);
 }

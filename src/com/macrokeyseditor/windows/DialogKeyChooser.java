@@ -26,28 +26,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Dimension;
 
-/** Finestra per prendere i vari tasti */
+/** WIndow to take the keys from the user */
 public class DialogKeyChooser extends JDialog {
 
-	/** Tempo di attesa dal primo input prima di prendere la combinazione di tasti, in secondi */
-	//private static final float KEY_ELAPSED_SEC = 1.0f;
-	/** Tempo di attesa dal primo input prima di prendere la combinazione di tasti, in millisecondi */
-	//private static final int KEY_ELAPSED_MS = (int)(KEY_ELAPSED_SEC * 1000.0f);
 	
 	private JButton btnOk;
 	private JButton btnDeleteLast;
 	private JLabel lblKeySequence;
 	
 	
-	/** Lista della sequenza di tasti; di lunghezza massima pari a {@link LimitedKeySequence#MAX_KEYS} */
+	/** Sequence of the keys; of maximum lenth of {@link LimitedKeySequence#MAX_KEYS} */
 	private final List<Integer> keyList = new ArrayList<>();
-	/** Oggetto da restituire */
+	
+	/** Object to return */
 	private LimitedKeySequence keySequence;
 
 	
 	/**
-	 * @param parent Finestra padre
-	 * @param seq Sequenza iniziale pu� essere null
+	 * @param parent Parent window
+	 * @param seq Initial sequence (if edit is needed) null to create a new one
 	 */
 	public DialogKeyChooser(Window parent, LimitedKeySequence seq) {
 		super(parent, ModalityType.DOCUMENT_MODAL);
@@ -113,7 +110,7 @@ public class DialogKeyChooser extends JDialog {
 		lblKeySequence.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlUp.add(lblKeySequence, BorderLayout.SOUTH);
 		
-		//Per funzionare non ci devono essere componenti focusabili
+		// To make this work no component has to be focusable
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -135,7 +132,7 @@ public class DialogKeyChooser extends JDialog {
 	}
 
 	/**
-	 * Aggiorna la {@link lblKeySequence}
+	 * Update the {@link lblKeySequence}
 	 */
 	private void updateLabelKeys() {
 		String text;
@@ -157,8 +154,8 @@ public class DialogKeyChooser extends JDialog {
 	
 	
 	/**
-	 * Mostra la finestra
-	 * @return True l'utente conferma l'operazione
+	 * Show the window
+	 * @return True if the user confirm the operation
 	 */
 	public boolean showDialog() {
 		super.setVisible(true);
@@ -180,14 +177,14 @@ public class DialogKeyChooser extends JDialog {
 	
 	@Override
 	public void setVisible(boolean b) {
-		//Inutilizzabile dall'utente
+		// Unusable from the user
 	}
 
 
 
 
 	/**
-	 * @return Sequenza di tasti premuta
+	 * @return Sequence key pressed
 	 */
 	public @NonNull LimitedKeySequence getKeySequence() {
 		return keySequence;

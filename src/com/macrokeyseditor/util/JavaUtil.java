@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /**
- * Classe statica che raccogli utility
+ * Static class for generic utility
  */
 public final class JavaUtil {
 
@@ -13,26 +15,23 @@ public final class JavaUtil {
 	
 	
 	/**
-	 * Rimuove la prima occorrenza dell'istanza indicata.
-	 * @param instance Instanza da rimuovere
-	 * @param c Collezione dove effettuare la rimozione
-	 * @return True se rimozione eseguita, False altrimenti
-	 * @throws NullPointerException Se {@code c} è null
+	 * Remove the first instance in the collection.
+	 * @param instance Instance to remove
+	 * @param c Collection where to find the instance
+	 * @return True if instance removed, False otherwise
 	 */
-	public static <T> boolean removeInstance(T instance, Collection<T> c) {
+	public static <T> boolean removeInstance(T instance, @NonNull Collection<T> c) {
 		Objects.requireNonNull(c);
 		return removeInstance(instance, c.iterator());
 	}
 	
-	
 	/**
-	 * Rimuove la prima occorrenza dell'istanza indicata.
-	 * @param instance Instanza da rimuovere
-	 * @param it Iteratore dove eseguire la rimozione
-	 * @return True se rimozione eseguita, False altrimenti
-	 * @throws NullPointerException Se {@code it} è null
+	 * Remove the first instance in the collection.
+	 * @param instance Instance to remove
+	 * @param it Iterator where to find the instance
+	 * @return True if instance removed, False otherwise
 	 */
-	public static <T> boolean removeInstance(T instance, Iterator<T> it) {
+	public static <T> boolean removeInstance(T instance, @NonNull Iterator<T> it) {
 		Objects.requireNonNull(it);
 		
 		while(it.hasNext()) {
@@ -48,26 +47,23 @@ public final class JavaUtil {
 	
 	
 	/**
-	 * Indica se la collezione contiene l'istanza indicata.
-	 * @param instance Istanza da trovare
-	 * @param c Collezzione sulla quale fare la ricerca
-	 * @return True in caso trovata, False altrimenti
-	 * @throws NullPointerException Se {@code c} è null
+	 * Find the given instance
+	 * @param instance Instance to find
+	 * @param c Collection where to find the instance
+	 * @return True if instance found, False otherwise
 	 */
-	public static <T> boolean contains(T instance, Collection<T> c) {
+	public static <T> boolean contains(T instance, @NonNull Collection<T> c) {
 		Objects.requireNonNull(c);
 		return contains(instance, c.iterator());
 	}
 	
-	
 	/**
-	 * Indica se la collezione contiene l'istanza indicata.
-	 * @param instance Istanza da trovare
-	 * @param it Iteratore sul quale fare la ricerca
-	 * @return True in caso trovata, False altrimenti
-	 * @throws NullPointerException Se {@code c} è null
+	 * Find the given instance
+	 * @param instance Instance to find
+	 * @param it Iterator where to find the instance
+	 * @return True if instance found, False otherwise
 	 */
-	public static <T> boolean contains(T instance, Iterator<T> it) {
+	public static <T> boolean contains(T instance, @NonNull Iterator<T> it) {
 		Objects.requireNonNull(it);
 		
 		while(it.hasNext()) {
