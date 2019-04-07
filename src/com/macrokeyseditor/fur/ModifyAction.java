@@ -47,12 +47,11 @@ public class ModifyAction<T> extends Action {
 	public ModifyAction(@NonNull String name, @NonNull List<Set<T>> sets, int maxElapsedTime)
 			throws NullPointerException, NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		if(name == null) {
-			throw new NullPointerException("Parameter 'name' and 'obj' must be not null");
-		} else
-			
-		// The first letter must be uppercase
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(sets);
+		
 		if(!Character.isUpperCase(name.charAt(0))) {
+			// The first letter must be uppercase
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		} else if(sets.isEmpty()) {
 			throw new IllegalArgumentException("Sets list empty");
@@ -165,9 +164,7 @@ public class ModifyAction<T> extends Action {
 	 * @param l List where do the search
 	 * @return {@link State} of the instance; null if not found
 	 */
-	private State findState(@NonNull T instance, @NonNull List<State> l) {
-		assert instance != null && l != null;
-		
+	private State findState(@NonNull T instance, @NonNull List<State> l) {		
 		for(State s : l) {
 			if(s.instance == instance) {
 				return s;

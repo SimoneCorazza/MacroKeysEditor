@@ -116,8 +116,6 @@ public final class MKPropetyComponent extends JPanel {
 	*/
 	private static boolean atLeastOneInCommon(@NonNull List<MacroKey> l,
 			@NonNull List<MacroKey> ll) {
-		assert l != null && ll != null;
-		
 		for(MacroKey m : ll) {
 			for(MacroKey mm : l) {
 				if(m == mm) {
